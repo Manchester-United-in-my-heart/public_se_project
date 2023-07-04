@@ -8,7 +8,7 @@ export default async function (req, res) {
 
     const collection = db.collection('shop')
 
-    await collection.insertOne({name: req.body.name, email: req.body.email})
+    await collection.insertOne({name: req.body.name, email: req.body.email, password: req.body.password, address: req.body.address, phone: req.body.phone})
 
     await client.close()
     res.status(200).json(
@@ -41,7 +41,7 @@ export default async function (req, res) {
 
     const collection = db.collection('shop')
 
-    await collection.updateOne({_id: new ObjectId(req.body.id)}, {$set: {name: req.body.name, email: req.body.email}})
+    await collection.updateOne({_id: new ObjectId(req.body.id)}, {$set: {name: req.body.name, email: req.body.email, password: req.body.password, address: req.body.address, phone: req.body.phone}})
 
     await client.close()
     res.status(200).json(

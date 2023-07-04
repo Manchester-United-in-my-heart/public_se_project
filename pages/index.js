@@ -10,7 +10,7 @@ export default function Home(props) {
   if (session.dispatchToken.user.role === "admin") {
 
     const [listShop, setListShop] = useState(props.shop.list_shop)
-
+    const [isLoadingListShop,setIsLoadingListShop] = useState(false)
     const [isShownEditModal, setIsShownEditModal] = useState(false)
     const [editData, setEditData] =
       useState(
@@ -60,42 +60,64 @@ export default function Home(props) {
       )
     }
 
-    const {data, isLoading, error} = useSWR('/api/admin', (url) => fetch(url).then(res => res.json()))
-    useEffect(() => {
-      if (data) {
-        setListShop(data.list_shop);
-        setIsShownAddModal(false);
-        setIsShownEditModal(false)
-      }
-    }, [data])
-
     const deleteApi = async (id) => {
+      setIsLoadingListShop(true)
       const res = await fetch(`http://localhost:3000/api/admin?id=${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
         }
       })
+      setIsLoadingListShop(false)
+      setIsShownAddModal(false)
+      setIsShownEditModal(false)
+      setListShop(listShop.filter((item) => item._id !== id))
     }
 
-    const editApi = async (id, name, email) => {
+    const editApi = async (id, name, email, password, address, phone) => {
+      setIsLoadingListShop(true)
       const res = await fetch(`http://localhost:3000/api/admin`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({id, name, email})
+        body: JSON.stringify({id, name, email, password, address, phone})
       })
+      setIsLoadingListShop(false)
+      setIsShownAddModal(false)
+      setIsShownEditModal(false)
+      setListShop(listShop.map((item) => {
+        if (item._id === id) {
+          item.name = name
+          item.email = email
+          item.password = password
+          item.address = address
+          item.phone = phone
+        }
+        return item
+      }))
     }
-    const addApi = async (name, email) => {
+    const addApi = async (name, email, password, address, phone) => {
+      setIsLoadingListShop(true)
       const res = await fetch(`http://localhost:3000/api/admin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({name, email})
+        body: JSON.stringify({name, email, password, address, phone})
       })
-    }
+      setIsLoadingListShop(false)
+      setIsShownAddModal(false)
+      setIsShownEditModal(false)
+      setListShop([...listShop, {
+        id: res.id,
+        name: name,
+        email: email,
+        password: password,
+        address: address,
+        phone: phone
+      }])
+      }
 
 
     return (
@@ -170,7 +192,7 @@ export default function Home(props) {
               </div>
             </div>
           ))}
-          {isLoading && <div>Loading...</div>}
+          {isLoadingListShop && <div>Loading...</div>}
 
           <div className={'flex justify-center'}>
             <div className={'w-1/2'}>
@@ -192,16 +214,18 @@ export default function Home(props) {
       </>
     )
   }
-  return (
-    session.dispatchToken.user.role === 'shop' ?
+  else if (session.dispatchToken.user.role === 'shop') {
+    return(
       <>
-        <div>
-          <button onClick={async () => {
-            await signOut()
-          }}>Sign Out
-          </button>
-        </div>
-      </> :
+        This Page's Purpose is showing the shop's order
+        <button onClick={async () => {
+          await signOut()
+        }}>Sign Out
+        </button>
+      </>
+    )
+  }
+  return (
       session.dispatchToken.user.role === 'customer' ?
         <>
           <button onClick={async () => {
@@ -230,6 +254,7 @@ export async function getServerSideProps({req}) {
     }
   }
 
+  if (session.dispatchToken.user.role === 'admin') {
 
   const res = await fetch('http://localhost:3000/api/admin')
 
@@ -239,6 +264,18 @@ export async function getServerSideProps({req}) {
     props: {
       session,
       shop: data
+    }
+  }}
+  else if (session.dispatchToken.user.role === 'shop') {
+    const res = await fetch(`http://localhost:3000/api/shop?shopID=${session.dispatchToken.user._id}`)
+
+    const data = await res.json()
+
+    return {
+      props: {
+        session,
+        productList: data.productList
+      }
     }
   }
 }

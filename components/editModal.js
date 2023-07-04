@@ -14,7 +14,7 @@ export default function EditModal(props) {
               <label htmlFor="name">Name</label>
             </div>
             <div>
-              <input type="text" id={'name'} defaultValue={name} {...register('name', {required: true})}/>
+              <input type="text" id={'name'} defaultValue={name} {...register('name')}/>
             </div>
           </div>
           <div className={'flex justify-around'}>
@@ -22,7 +22,7 @@ export default function EditModal(props) {
               <label htmlFor="email">Email</label>
             </div>
             <div>
-              <input type="text" id={'email'} defaultValue={email} {...register('email', {required: true})}/>
+              <input type="text" id={'email'} defaultValue={email} {...register('email')}/>
             </div>
           </div>
           <div className={'flex justify-around'}>
@@ -30,7 +30,7 @@ export default function EditModal(props) {
               <label htmlFor="password">Password</label>
             </div>
             <div>
-              <input type="text" id={'password'} defaultValue={password} {...register('password', {required: true})}/>
+              <input type="text" id={'password'} defaultValue={password} {...register('password')}/>
             </div>
           </div>
           <div className={'flex justify-around'}>
@@ -38,7 +38,7 @@ export default function EditModal(props) {
               <label htmlFor="address">Address</label>
             </div>
             <div>
-              <input type="text" id={'address'} defaultValue={address} {...register('address', {required: true})}/>
+              <input type="text" id={'address'} defaultValue={address} {...register('address')}/>
             </div>
           </div>
           <div className={'flex justify-around'}>
@@ -46,7 +46,7 @@ export default function EditModal(props) {
               <label htmlFor="phone">Phone</label>
             </div>
             <div>
-              <input type="text" id={'phone'} defaultValue={phone} {...register('phone', {required: true})}/>
+              <input type="text" id={'phone'} defaultValue={phone} {...register('phone')}/>
             </div>
           </div>
         </form>

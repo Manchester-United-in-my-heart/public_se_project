@@ -42,6 +42,10 @@ export default function (props)
             </div>
           </div>))}
       </div>
+
+      <div>
+        <a href={'/product/add'}> Add </a>
+      </div>
     </>
   )
 }

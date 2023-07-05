@@ -30,9 +30,11 @@ export default async function (req, res){
 
     const collection = db.collection('productpool')
 
-    await collection.insertOne(req.body)
+    await collection.insertOne(JSON.parse(req.body))
 
     await client.close()
+
+    console.log('done')
 
     res.status(200).json(
       {
@@ -42,8 +44,6 @@ export default async function (req, res){
   }
   else if (req.method === 'PUT')
   {
-    console.log(req.body)
-    console.log(req.query)
 
     const client = await MongoClient.connect('mongodb+srv://khambui2003:Emtraitoi123@office.9dnkbti.mongodb.net/seproject?retryWrites=true&w=majority')
 
@@ -60,6 +60,28 @@ export default async function (req, res){
     res.status(200).json(
       {
         mess: 'test'
+      }
+    )
+  }
+  else if (req.method === 'DELETE')
+  {
+    const productId = req.query.productId
+
+    console.log(productId)
+
+    const client = await MongoClient.connect('mongodb+srv://khambui2003:Emtraitoi123@office.9dnkbti.mongodb.net/seproject?retryWrites=true&w=majority')
+
+    const db = client.db()
+
+    const collection = db.collection('productpool')
+
+    await collection.deleteOne({_id:new ObjectId(productId)})
+
+    await client.close()
+
+    res.status(200).json(
+      {
+        mess: 'test delete'
       }
     )
   }

@@ -1,20 +1,20 @@
-import {getSession} from "next-auth/react";
-import {get, set, useForm} from "react-hook-form";
 import {useEffect, useState} from "react";
-import { storage } from "@/firebase.config";
-import { ref, uploadBytesResumable, getDownloadURL} from "firebase/storage";
-
+import {useForm} from "react-hook-form";
+import {getDownloadURL, ref, uploadBytesResumable} from "firebase/storage";
+import {storage} from "@/firebase.config";
+import {getSession} from "next-auth/react";
 export default function (props)
 {
+  console.log(props.session.dispatchToken.user._id)
   const [product,setProduct] = useState(
     {
-      productId: props._id,
-      productName: props.productName,
-      productDescription: props.productDescription,
-      productPrice: props.productPrice,
-      productUnit: props.productUnit,
-      productImage: props.productImage,
-      shopID: props.shopID
+      productId: '',
+      productName: '',
+      productDescription: '',
+      productPrice: '',
+      productUnit: '',
+      productImage: '',
+      shopID: '',
     }
   )
   const {handleSubmit, register, watch} = useForm()
@@ -25,7 +25,7 @@ export default function (props)
 
   const [isUsedFile, setIsUsedFile] = useState(true)
 
-  const saveChangeHandler = async (data) =>
+  const addHandler = async (data) =>
   {
     if(isUsedFile) {
       if (!file) {
@@ -34,23 +34,24 @@ export default function (props)
       const storageRef = ref(storage, `/files/${file.name}${new Date}`);
       await uploadBytesResumable(storageRef, file)
       const newUrl = await getDownloadURL(storageRef)
-      await fetch(`http://localhost:3000/api/product?productId=${product.productId}`,
+      await fetch(`http://localhost:3000/api/product`,
         {
-          method: 'PUT',
+          method: 'POST',
           body: JSON.stringify({
               productName: data.productName,
               productDescription: data.productDescription,
               productPrice: data.productPrice,
               productUnit: data.productUnit,
-              productImage: newUrl
+              productImage: newUrl,
+              shopId: props.session.dispatchToken.user._id
             }
           )
         })
     } else
     {
-      await fetch(`http://localhost:3000/api/product?productId=${product.productId}`,
+      await fetch(`http://localhost:3000/api/product`,
         {
-          method: 'PUT',
+          method: 'POST',
           body: JSON.stringify({
               productName: data.productName,
               productDescription: data.productDescription,
@@ -64,19 +65,11 @@ export default function (props)
 
   }
 
-  const deleteHandler = async (data) =>
-  {
-    await fetch(`http://localhost:3000/api/product?productId=${product.productId}`,
-      {
-        method: 'DELETE',
-      })
-  }
-
   useEffect( () =>
     {
       setIsUsedFile(watch('option'))
     }
-  , [watch('option')])
+    , [watch('option')])
   useEffect( () =>
     {
       setFile(watch('file')[0])
@@ -145,24 +138,29 @@ export default function (props)
         }
       </form>
       <div>
-        <button onClick={handleSubmit(saveChangeHandler)}>Save Changes</button>
-      </div>
-      <div>
-        <button onClick={handleSubmit(deleteHandler)}>Delete</button>
+        <button onClick={handleSubmit(addHandler)}>Save Changes</button>
       </div>
     </>
   )
 }
 
-export async function getServerSideProps({req, params})
+export async function getServerSideProps({req})
 {
   const session = await getSession({req})
 
-  const res = await fetch(`http://localhost:3000/api/product?productId=${params.productId}`)
-
-  const data = await res.json()
+  if(!session)
+  {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false
+      }
+    }
+  }
 
   return {
-    props: data.product
+    props: {
+      session
+    }
   }
 }

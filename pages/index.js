@@ -225,19 +225,24 @@ export default function Home(props) {
       </>
     )
   }
+  console.log(props)
   return (
-      session.dispatchToken.user.role === 'customer' ?
         <>
-          <button onClick={async () => {
-            await signOut()
-          }}>Sign Out
-          </button>
-        </> :
-        <>
-          <button onClick={async () => {
-            await signOut()
-          }}>Sign Out
-          </button>
+          <div>
+            <button onClick={async () => {
+              await signOut()
+            }}>Sign Out
+            </button>
+          </div>
+
+          <div>
+            {props.shopData.list_shop.map(shop => (
+              <div key={shop._id}>
+                <a href = {`/shop/${shop._id}`}>{shop.name}</a>
+              </div>))
+            }
+          </div>
+
         </>
   )
 }
@@ -275,6 +280,17 @@ export async function getServerSideProps({req}) {
       props: {
         session,
         productList: data.productList
+      }
+    }
+  }
+
+  else if (session.dispatchToken.user.role === 'customer') {
+    const shopRes = await fetch(`http://localhost:3000/api/admin`)
+    const shopData = await shopRes.json()
+    return {
+      props: {
+        session,
+        shopData
       }
     }
   }

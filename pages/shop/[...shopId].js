@@ -6,55 +6,70 @@ export default function (props)
   console.log('props', props)
   const {register, handleSubmit, watch, setValue}= useForm();
 
-  const [currentCart, setCurrentCart] = useState([...props.cart.cartList])
+  const [currentCart, setCurrentCart] = useState({...props.cart.cartList})
 
   const onSubmit = async (data) =>
     {
       console.log(data)
-      // set all the values to 0
       props.productList.map((product) =>
         {
           setValue(product._id,0)
         }
       )
 
-      // update current cart
       for (const product in data)
+      {
+        const productId = product
+        const quantity = data[product]
+        const productDetails = props.productList.find((product) => product._id === productId)
+        if (quantity >0)
         {
-          const productId = product
-          const quantity = data[product]
-
-          const productDetails = props.productList.find((product) => product._id === productId)
-
-          if(quantity > 0)
+          if (!Object.hasOwn(currentCart, props.shopId))
           {
-            const productIndex = currentCart.findIndex((product) => product.productId === productId)
-            if(productIndex === -1)
-            {
-              setCurrentCart([...currentCart, {shopId: productDetails.shopId,productId:productId, quantity:quantity, price: productDetails.productPrice}])
-            } else
-            {
-              const newCart = [...currentCart]
-              newCart[productIndex].quantity += quantity
+            console.log('not added yet')
+            const newCart = {...currentCart}
+            newCart[props.shopId] = [{productId: productId,productName: productDetails.productName, quantity: quantity, price: productDetails.productPrice}]
+            setCurrentCart(newCart)
+          }
+          else {
+            const productIndex = currentCart[props.shopId].findIndex((product) => product.productId === productId)
+
+            if (productIndex === -1) {
+              const newCart = {...currentCart}
+              newCart[props.shopId] = [ ...newCart[props.shopId], {
+                productId: productId,
+                productName: productDetails.productName,
+                quantity: quantity,
+                price: productDetails.productPrice
+              }]
+              setCurrentCart(newCart)
+            } else {
+              const newCart = {...currentCart}
+              newCart[props.shopId][productIndex].quantity += quantity
               setCurrentCart(newCart)
             }
           }
         }
-
+      }
 
     };
 
-  useEffect(async () =>
-  {
-    console.log(currentCart)
-    // update cart in database
-    await fetch(`http://localhost:3000/api/customer?cartId=${props.cart._id}`,{
-      method: 'PATCH',
-      body: JSON.stringify({
-        cartList: currentCart
-      })
-    })
-  }, [currentCart])
+  useEffect(
+    () =>
+    {
+      const process = async () =>
+      {
+        await fetch(`http://localhost:3000/api/customer?cartId=${props.cart.cartId}`,{
+          method: 'PATCH',
+          body: JSON.stringify({
+            cartList: currentCart
+          })
+        })
+      }
+
+      process()
+    }
+    , [currentCart])
 
   return(
     <form>

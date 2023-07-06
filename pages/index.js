@@ -4,6 +4,7 @@ import AddModal from "@/components/addModal";
 import {useEffect, useState} from "react";
 import {getSession, useSession, signOut} from "next-auth/react";
 import useSWR from "swr";
+import CartModal from "@/components/cartModal";
 
 export default function Home(props) {
   const {data: session} = useSession()
@@ -225,10 +226,13 @@ export default function Home(props) {
       </>
     )
   }
-  console.log(props)
+  const [isCartModalOn, setIsCartModalOn] = useState(false)
+
   return (
         <>
-          <div>
+          <div className={'flex gap-4'}>
+            {isCartModalOn && <CartModal cartList={props.cartList} shopList={props.shopList} setIsCartModalOn={setIsCartModalOn} purchaseHandler={()=>{}}/>}
+            <button onClick={()=>{setIsCartModalOn(true)}}> Your Cart</button>
             <button onClick={async () => {
               await signOut()
             }}>Sign Out
@@ -236,13 +240,12 @@ export default function Home(props) {
           </div>
 
           <div>
-            {props.shopData.list_shop.map(shop => (
+            {props.shopList.map(shop => (
               <div key={shop._id}>
                 <a href = {`/shop/${shop._id}`}>{shop.name}</a>
               </div>))
             }
           </div>
-
         </>
   )
 }
@@ -287,10 +290,13 @@ export async function getServerSideProps({req}) {
   else if (session.dispatchToken.user.role === 'customer') {
     const shopRes = await fetch(`http://localhost:3000/api/admin`)
     const shopData = await shopRes.json()
+    const cartRes = await fetch(`http://localhost:3000/api/customer?cartId=${session.dispatchToken.user._id}`)
+    const cartData = await cartRes.json()
     return {
       props: {
-        session,
-        shopData
+        session:session,
+        shopList: shopData.list_shop,
+        cartList: cartData.cart.cartList
       }
     }
   }

@@ -23,15 +23,9 @@ export default async function (req, res) {
 
     if (req.method === 'PATCH'){
 
-      console.log("I am be called")
-
       const cartId = req.query.cartId
 
       const resBody = JSON.parse(req.body)
-
-      console.log('resBody', resBody)
-
-      console.log('cartId', cartId)
 
       await collection.updateOne({cartId: cartId}, {$set: resBody})
 

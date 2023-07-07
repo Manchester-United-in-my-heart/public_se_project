@@ -5,7 +5,7 @@ import {useEffect, useState} from "react";
 import {getSession, useSession, signOut} from "next-auth/react";
 import useSWR from "swr";
 import CartModal from "@/components/cartModal";
-
+import Bill from "@/components/bill";
 export default function Home(props) {
   const {data: session} = useSession()
   if (session.dispatchToken.user.role === "admin") {
@@ -218,20 +218,26 @@ export default function Home(props) {
   else if (session.dispatchToken.user.role === 'shop') {
     return(
       <>
-        This Page's Purpose is showing the shop's order
         <button onClick={async () => {
           await signOut()
         }}>Sign Out
         </button>
+        {props.billList.map(bill => (
+          <div key={bill._id}>
+            <Bill cart={bill.cart} customerEmail={bill.customerEmail} address={bill.address} phone={bill.phone} totalPaid={bill.totalPaid} />
+          </div>
+        ))}
+        <div>
+          <a href={'/product'}>Product</a>
+        </div>
       </>
     )
   }
   const [isCartModalOn, setIsCartModalOn] = useState(false)
-
   return (
         <>
           <div className={'flex gap-4'}>
-            {isCartModalOn && <CartModal cartList={props.cartList} shopList={props.shopList} setIsCartModalOn={setIsCartModalOn} purchaseHandler={()=>{}}/>}
+            {isCartModalOn && <CartModal cartId={props.session.dispatchToken.user._id} cartList={props.cartList} shopList={props.shopList} setIsCartModalOn={setIsCartModalOn} purchaseHandler={()=>{}}/>}
             <button onClick={()=>{setIsCartModalOn(true)}}> Your Cart</button>
             <button onClick={async () => {
               await signOut()
@@ -276,13 +282,16 @@ export async function getServerSideProps({req}) {
   }}
   else if (session.dispatchToken.user.role === 'shop') {
     const res = await fetch(`http://localhost:3000/api/shop?shopID=${session.dispatchToken.user._id}`)
-
     const data = await res.json()
+
+    const resBill = await fetch(`http://localhost:3000/api/bill?shopId=${session.dispatchToken.user._id}`)
+    const dataBill = await resBill.json()
 
     return {
       props: {
         session,
-        productList: data.productList
+        productList: data.productList,
+        billList: dataBill.bills
       }
     }
   }

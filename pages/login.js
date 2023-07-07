@@ -1,7 +1,6 @@
 import {getSession,signIn} from "next-auth/react";
 import {useForm} from "react-hook-form";
 import {useRouter} from "next/router";
-import {redirect} from "next/navigation";
 
 export default function ()
 {
@@ -47,6 +46,8 @@ export default function ()
          <input type={'submit'}/>
        </div>
      </form>
+
+     <a href={'/register'}> Not have account yet ? Register here</a>
    </>
  )
 }

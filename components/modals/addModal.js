@@ -6,8 +6,8 @@ export default function AddModal(props) {
   const {register, handleSubmit, formState: {errors}} = useForm();
 
   return (
-    <div className={'flex justify-center'}>
-      <div className={'w-1/2'}>
+    <div className={'absolute flex justify-center items-center top-0 left-0 w-screen h-screen bg-[rgba(0,0,0,0.8)]'}>
+      <div className={'w-full bg-white mx-40 pt-6 pb-10'}>
         <form>
           <div className={'flex justify-around'}>
             <div>
@@ -50,7 +50,6 @@ export default function AddModal(props) {
             </div>
           </div>
         </form>
-
         <div>
           <button
             onClick={handleSubmit(
@@ -59,12 +58,13 @@ export default function AddModal(props) {
               })}>Add
           </button>
         </div>
+        <div>
+          <button onClick={() => {
+            showHandler(false)
+          }}>Close
+          </button>
+        </div>
       </div>
-      <div>
-        <button onClick={() => {
-          showHandler(false)
-        }}>Close
-        </button>
-      </div>
+
     </div>)
 }

@@ -8,7 +8,6 @@ export default function EditModal(props) {
   return (
     <div className={'absolute flex justify-center items-center top-0 left-0 w-screen h-screen bg-[rgba(0,0,0,0.8)]'}>
       <div className={'w-full mx-40 pt-6 pb-10 border-[5px] rounded-2xl border-blue-400 bg-white opacity-100 text-black'}>
-        <div className={'w-full'}>
           <form className={'flex flex-col gap-4 mx-40'}>
             <div className={'flex justify-between'}>
               <div className={'font-bold text-xl'}>
@@ -109,7 +108,6 @@ export default function EditModal(props) {
           </div>
         </div>
 
-      </div>
     </div>
 )
 }

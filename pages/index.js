@@ -3,12 +3,14 @@ import EditModal from "@/components/modals/editModal";
 import AddModal from "@/components/modals/addModal";
 import {useContext, useEffect, useState} from "react";
 import {getSession, useSession, signOut} from "next-auth/react";
-import CartModal from "@/components/modals/cartModal";
 import Bill from "@/components/bill";
 import AdminHeader from "@/layout/headers/adminHeader";
 import ShopDetail from "@/components/shopDetail";
 import NotificationContext from "@/store/notification-context";
 import ShopHeader from "@/layout/headers/shopHeader";
+import BillFragment from "@/layout/fragments/billList";
+import ReadOnlyCartModal from "@/components/modals/readOnlyCartModal";
+import CartModal from "@/components/modals/cartModal";
 export default function Home(props) {
   const {data: session} = useSession()
   const notificationCtx = useContext(NotificationContext)
@@ -155,16 +157,14 @@ export default function Home(props) {
         return item
       }))
     }
+    const [isCartModalOn, setIsCartModalOn] = useState(false)
+    const [cartModalProps, setCartModalProps] = useState(null)
 
     return(
       <>
+        {isCartModalOn && <ReadOnlyCartModal cartModalProps={cartModalProps} showHandler={setIsCartModalOn}/>}
         <ShopHeader logoUrl={'/'} logoSrc={'/logo.png'} productUrl={'/product'} signOutHandler={signOut}/>
-
-        {billList.map(bill => (
-          <div key={bill._id}>
-            <Bill cart={bill.cart} customerEmail={bill.customerEmail} address={bill.address} phone={bill.phone} totalPaid={bill.totalPaid} isFulfilled={bill.isFulfilled} fulfillTrigger={async ()=>{await fulfillHandler(bill._id)}} />
-          </div>
-        ))}
+        <BillFragment billList={billList} fulfillHandler={fulfillHandler} setIsCartModalOn={setIsCartModalOn} setCartModalProps={setCartModalProps}/>
       </>
     )
   }

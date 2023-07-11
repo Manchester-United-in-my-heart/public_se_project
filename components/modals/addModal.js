@@ -1,7 +1,7 @@
 import {useForm} from "react-hook-form";
 
 export default function AddModal(props) {
-  const {name, email, password, address, phone, showHandler, addHandler} = {...props}
+  const {name, email, password, address, phone, showHandler, addHandler, notificationContext} = {...props}
 
   const {register, handleSubmit, formState: {errors}} = useForm();
 
@@ -50,16 +50,35 @@ export default function AddModal(props) {
             </div>
           </div>
         </form>
-        <div className={'flex justify-center'}>
-          <button
+        <div className={'flex justify-center py-2'}>
+          <button className={'px-4 py-2 border-[1px] border-black rounded-2xl hover:bg-green-600 hover:text-white transition-all duration-300'}
             onClick={handleSubmit(
               async (data) => {
+                notificationContext.showNotification(
+                  {
+                    isLoading: true,
+                    isSuccess: false,
+                    successMessage: '',
+                    isError: false,
+                    errorMessage: '',
+                  }
+                )
                 await addHandler(data.name, data.email, data.password, data.address, data.phone)
+                notificationContext.showNotification(
+                  {
+                    isLoading: false,
+                    isSuccess: true,
+                    successMessage: 'Thêm cửa hàng thành công',
+                    isError: false,
+                    errorMessage: '',
+                  }
+                )
               })}>Add
           </button>
         </div>
-        <div className={'flex justify-center'}>
-          <button onClick={() => {
+        <div className={'flex justify-center py-2'}>
+          <button className={'px-4 py-2 border-[1px] border-black rounded-2xl hover:bg-blue-600 hover:text-white transition-all duration-300'}
+            onClick={() => {
             showHandler(false)
           }}>Close
           </button>

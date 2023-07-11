@@ -99,7 +99,7 @@ export default function Home(props) {
 
     return (
       <>
-        {isShownAddModal && <AddModal name={''} email={''} password={''} address={''} phone={''} showHandler={setIsShownAddModal} addHandler={addApi} />}
+        {isShownAddModal && <AddModal name={''} email={''} password={''} address={''} phone={''} showHandler={setIsShownAddModal} addHandler={addApi} notificationContext={notificationCtx} />}
         {isShownEditModal && <EditModal id={editData.id} name={editData.name} email={editData.email} password={editData.password} address={editData.address} phone={editData.phone} showHandler={setIsShownEditModal} deleteHandler={deleteApi} editHandler={editApi} notificationContext={notificationCtx}/>}
         <div className={'p-4 flex justify-around'}>
           <AdminHeader logoUrl={'/'} logoSrc={'/logo.png'} signOutHandler={signOut}/>
@@ -127,7 +127,7 @@ export default function Home(props) {
           </div>
           <div className={'flex flex-col gap-4 mt-4'}>
             {listShop && listShop.map(shop => (
-              <div key={shop._id} className={'px-20 grid grid-cols-6 text-center'}>
+              <div key={shop._id} className={'px-20 grid grid-cols-6 items-center text-center'}>
                 <ShopDetail id={shop._id} name={shop.name} email={shop.email} password={shop.password} address={shop.address} phone={shop.phone} editModalHandler={editModalHandler}/>
               </div>))}
           </div>

@@ -80,7 +80,7 @@ export default function (props)
       <form>
         <div className={'flex justify-around'}>
           <div>
-            <label htmlFor="name">Name</label>
+            <label htmlFor="name">Tên sản phẩm</label>
           </div>
           <div>
             <input type="text" id={'email'} defaultValue={product.productName} {...register('productName', {required: true})}/>
@@ -88,7 +88,7 @@ export default function (props)
         </div>
         <div className={'flex justify-around'}>
           <div>
-            <label htmlFor="description">Description</label>
+            <label htmlFor="description">Mô tả</label>
           </div>
           <div>
             <input type="text" id={'description'} defaultValue={product.productDescription} {...register('productDescription', {required: true})}/>
@@ -96,7 +96,7 @@ export default function (props)
         </div>
         <div className={'flex justify-around'}>
           <div>
-            <label htmlFor="price">Price</label>
+            <label htmlFor="price">Giá</label>
           </div>
           <div>
             <input type="text" id={'price'} defaultValue={product.productPrice} {...register('productPrice', {required: true})}/>
@@ -104,7 +104,7 @@ export default function (props)
         </div>
         <div className={'flex justify-around'}>
           <div>
-            <label htmlFor="unit">Unit</label>
+            <label htmlFor="unit">Đơn vị tính</label>
           </div>
           <div>
             <input type="text" id={'unit'} defaultValue={product.productUnit} {...register('productUnit', {required: true})}/>
@@ -112,7 +112,7 @@ export default function (props)
         </div>
         <div className={'flex justify-around'}>
           <div>
-            <label htmlFor="option">Upload File ?</label>
+            <label htmlFor="option">Tải lên ảnh?</label>
           </div>
           <div>
             <input type="checkbox" id={'option'} {...register('option')}/>
@@ -138,7 +138,7 @@ export default function (props)
         }
       </form>
       <div>
-        <button onClick={handleSubmit(addHandler)}>Save Changes</button>
+        <button onClick={handleSubmit(addHandler)}>Thêm sản phẩm</button>
       </div>
     </>
   )

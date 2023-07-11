@@ -1,9 +1,9 @@
-import {getSession} from "next-auth/react";
-import {get, set, useForm} from "react-hook-form";
-import {useEffect, useState} from "react";
+import {getSession, signOut} from "next-auth/react";
+import {useState} from "react";
 import { storage } from "@/firebase.config";
 import { ref, uploadBytesResumable, getDownloadURL} from "firebase/storage";
-
+import ShopHeader from "@/layout/headers/shopHeader";
+import EditProductFragment from "@/layout/fragments/editProduct";
 export default function (props)
 {
   const [product,setProduct] = useState(
@@ -17,12 +17,7 @@ export default function (props)
       shopID: props.shopID
     }
   )
-  const {handleSubmit, register, watch} = useForm()
   const [file, setFile] = useState(undefined)
-  const [url, setUrl] = useState('')
-  const [percent, setPercent] = useState(0)
-  const [uploadName, setUploadName] = useState('')
-
   const [isUsedFile, setIsUsedFile] = useState(true)
 
   const saveChangeHandler = async (data) =>
@@ -56,7 +51,7 @@ export default function (props)
               productDescription: data.productDescription,
               productPrice: data.productPrice,
               productUnit: data.productUnit,
-              productImage: watch('link')
+              productImage: data.link
             }
           )
         })
@@ -72,84 +67,10 @@ export default function (props)
       })
   }
 
-  useEffect( () =>
-    {
-      setIsUsedFile(watch('option'))
-    }
-  , [watch('option')])
-  useEffect( () =>
-    {
-      setFile(watch('file')[0])
-    }
-    , [watch('file')])
   return (
     <>
-      <form>
-        <div className={'flex justify-around'}>
-          <div>
-            <label htmlFor="name">Name</label>
-          </div>
-          <div>
-            <input type="text" id={'email'} defaultValue={product.productName} {...register('productName', {required: true})}/>
-          </div>
-        </div>
-        <div className={'flex justify-around'}>
-          <div>
-            <label htmlFor="description">Description</label>
-          </div>
-          <div>
-            <input type="text" id={'description'} defaultValue={product.productDescription} {...register('productDescription', {required: true})}/>
-          </div>
-        </div>
-        <div className={'flex justify-around'}>
-          <div>
-            <label htmlFor="price">Price</label>
-          </div>
-          <div>
-            <input type="text" id={'price'} defaultValue={product.productPrice} {...register('productPrice', {required: true})}/>
-          </div>
-        </div>
-        <div className={'flex justify-around'}>
-          <div>
-            <label htmlFor="unit">Unit</label>
-          </div>
-          <div>
-            <input type="text" id={'unit'} defaultValue={product.productUnit} {...register('productUnit', {required: true})}/>
-          </div>
-        </div>
-        <div className={'flex justify-around'}>
-          <div>
-            <label htmlFor="option">Upload File ?</label>
-          </div>
-          <div>
-            <input type="checkbox" id={'option'} {...register('option')}/>
-          </div>
-        </div>
-        {isUsedFile ?
-          <div className={'flex justify-around'}>
-            <div>
-              <label htmlFor="uploadfile">Upload</label>
-            </div>
-            <div>
-              <input id={'uploadfile'} type={'file'} {...register('file')}/>
-            </div>
-          </div>:
-          <div className={'flex justify-around'}>
-            <div>
-              <label htmlFor="link">Link</label>
-            </div>
-            <div>
-              <input id={'link'} defaultValue={product.productImage} {...register('link')}/>
-            </div>
-          </div>
-        }
-      </form>
-      <div>
-        <button onClick={handleSubmit(saveChangeHandler)}>Save Changes</button>
-      </div>
-      <div>
-        <button onClick={handleSubmit(deleteHandler)}>Delete</button>
-      </div>
+      <ShopHeader logoUrl={'/'} logoSrc={'/logo.png'} productUrl={'/product'} signOutHandler={signOut}/>
+      <EditProductFragment product={product} saveChangeHandler={saveChangeHandler} deleteHandler={deleteHandler} file={file} setFile={setFile} isUsedFile={isUsedFile} setIsUsedFile={setIsUsedFile}/>
     </>
   )
 }

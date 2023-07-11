@@ -1,10 +1,10 @@
 import {get, useForm} from "react-hook-form";
-import EditModal from "@/components/editModal";
-import AddModal from "@/components/addModal";
+import EditModal from "@/components/modals/editModal";
+import AddModal from "@/components/modals/addModal";
 import {useEffect, useState} from "react";
 import {getSession, useSession, signOut} from "next-auth/react";
 import useSWR from "swr";
-import CartModal from "@/components/cartModal";
+import CartModal from "@/components/modals/cartModal";
 import Bill from "@/components/bill";
 export default function Home(props) {
   const {data: session} = useSession()
@@ -147,7 +147,7 @@ export default function Home(props) {
           />}
         <div className={'p-4 flex justify-around'}>
           <div className={'text-2xl'}>
-            Logo's Place ({session.dispatchToken.user.role})
+            <img src={'/logo.png'} className={'w-20 h-20'} alt={'logo'}/>
           </div>
           <div className={'flex'}>
             <div>

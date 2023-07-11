@@ -1,29 +1,22 @@
 import {get, useForm} from "react-hook-form";
 import EditModal from "@/components/modals/editModal";
 import AddModal from "@/components/modals/addModal";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {getSession, useSession, signOut} from "next-auth/react";
 import CartModal from "@/components/modals/cartModal";
 import Bill from "@/components/bill";
 import AdminHeader from "@/layout/headers/adminHeader";
 import ShopDetail from "@/components/shopDetail";
+import NotificationContext from "@/store/notification-context";
 export default function Home(props) {
   const {data: session} = useSession()
+  const notificationCtx = useContext(NotificationContext)
   if (session.dispatchToken.user.role === "admin") {
 
     const [listShop, setListShop] = useState(props.shop.list_shop)
     const [isLoadingListShop,setIsLoadingListShop] = useState(false)
     const [isShownEditModal, setIsShownEditModal] = useState(false)
-    const [editData, setEditData] =
-      useState(
-        {
-          id: '',
-          name: '',
-          email: '',
-          password: '',
-          address: '',
-          phone: ''
-        })
+    const [editData, setEditData] = useState({id: '', name: '', email: '', password: '', address: '', phone: ''})
     const editModalHandler = ({id, name, email, password, address, phone}) => {
       setIsShownEditModal(true)
       setEditData(
@@ -37,29 +30,12 @@ export default function Home(props) {
         }
       )
     }
-
     const [isShownAddModal, setIsShownAddModal] = useState(false)
-    const [addData, setAddData] =
-      useState(
-        {
-          name: '',
-          email: '',
-          password: '',
-          address: '',
-          phone: ''
-        })
+    const [addData, setAddData] = useState({ name: '', email: '', password: '', address: '', phone: ''})
 
     const addModalHandler = ({name, email, password, address, phone}) => {
       setIsShownAddModal(true)
-      setAddData(
-        {
-          name: name,
-          email: email,
-          password: password,
-          address: address,
-          phone: phone
-        }
-      )
+      setAddData({name: name, email: email, password: password, address: address, phone: phone})
     }
 
     const deleteApi = async (id) => {
@@ -75,7 +51,6 @@ export default function Home(props) {
       setIsShownEditModal(false)
       setListShop(listShop.filter((item) => item._id !== id))
     }
-
     const editApi = async (id, name, email, password, address, phone) => {
       setIsLoadingListShop(true)
       const res = await fetch(`http://localhost:3000/api/admin`, {
@@ -124,28 +99,8 @@ export default function Home(props) {
 
     return (
       <>
-        {isShownAddModal &&
-          <AddModal
-            name={''}
-            email={''}
-            password={''}
-            address={''}
-            phone={''}
-            showHandler={setIsShownAddModal}
-            addHandler={addApi}
-          />}
-        {isShownEditModal &&
-          <EditModal
-            id={editData.id}
-            name={editData.name}
-            email={editData.email}
-            password={editData.password}
-            address={editData.address}
-            phone={editData.phone}
-            showHandler={setIsShownEditModal}
-            deleteHandler={deleteApi}
-            editHandler={editApi}
-          />}
+        {isShownAddModal && <AddModal name={''} email={''} password={''} address={''} phone={''} showHandler={setIsShownAddModal} addHandler={addApi} />}
+        {isShownEditModal && <EditModal id={editData.id} name={editData.name} email={editData.email} password={editData.password} address={editData.address} phone={editData.phone} showHandler={setIsShownEditModal} deleteHandler={deleteApi} editHandler={editApi} notificationContext={notificationCtx}/>}
         <div className={'p-4 flex justify-around'}>
           <AdminHeader logoUrl={'/'} logoSrc={'/logo.png'} signOutHandler={signOut}/>
         </div>

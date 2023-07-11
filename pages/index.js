@@ -3,9 +3,9 @@ import EditModal from "@/components/modals/editModal";
 import AddModal from "@/components/modals/addModal";
 import {useEffect, useState} from "react";
 import {getSession, useSession, signOut} from "next-auth/react";
-import useSWR from "swr";
 import CartModal from "@/components/modals/cartModal";
 import Bill from "@/components/bill";
+import AdminHeader from "@/layout/headers/adminHeader";
 export default function Home(props) {
   const {data: session} = useSession()
   if (session.dispatchToken.user.role === "admin") {
@@ -146,17 +146,7 @@ export default function Home(props) {
             editHandler={editApi}
           />}
         <div className={'p-4 flex justify-around'}>
-          <div className={'text-2xl'}>
-            <img src={'/logo.png'} className={'w-20 h-20'} alt={'logo'}/>
-          </div>
-          <div className={'flex'}>
-            <div>
-              <button onClick={async () => {
-                await signOut()
-              }}>Sign Out
-              </button>
-            </div>
-          </div>
+          <AdminHeader logoUrl={'/'} logoSrc={'/logo.png'} signOutHandler={signOut}/>
         </div>
 
         <div>

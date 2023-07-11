@@ -6,6 +6,7 @@ import {getSession, useSession, signOut} from "next-auth/react";
 import CartModal from "@/components/modals/cartModal";
 import Bill from "@/components/bill";
 import AdminHeader from "@/layout/headers/adminHeader";
+import ShopDetail from "@/components/shopDetail";
 export default function Home(props) {
   const {data: session} = useSession()
   if (session.dispatchToken.user.role === "admin") {
@@ -152,35 +153,36 @@ export default function Home(props) {
         <div>
           {listShop && listShop.map(shop => (
             <div key={shop._id} className={'flex justify-around'}>
-              <div>
-                {shop.name}
-              </div>
-              <div>
-                {shop.email}
-              </div>
-              <div>
-                {shop.password}
-              </div>
-              <div>
-                {shop.address}
-              </div>
-              <div>
-                {shop.phone}
-              </div>
-              <div>
-                <button onClick={() => {
-                  editModalHandler(
-                    {
-                      id: shop._id,
-                      name: shop.name, email: shop.email,
-                      password: shop.password,
-                      address: shop.address,
-                      phone: shop.phone
-                    })
-                }}>
-                  Edit
-                </button>
-              </div>
+              {/*<div>*/}
+              {/*  {shop.name}*/}
+              {/*</div>*/}
+              {/*<div>*/}
+              {/*  {shop.email}*/}
+              {/*</div>*/}
+              {/*<div>*/}
+              {/*  {shop.password}*/}
+              {/*</div>*/}
+              {/*<div>*/}
+              {/*  {shop.address}*/}
+              {/*</div>*/}
+              {/*<div>*/}
+              {/*  {shop.phone}*/}
+              {/*</div>*/}
+              {/*<div>*/}
+              {/*  <button onClick={() => {*/}
+              {/*    editModalHandler(*/}
+              {/*      {*/}
+              {/*        id: shop._id,*/}
+              {/*        name: shop.name, email: shop.email,*/}
+              {/*        password: shop.password,*/}
+              {/*        address: shop.address,*/}
+              {/*        phone: shop.phone*/}
+              {/*      })*/}
+              {/*  }}>*/}
+              {/*    Edit*/}
+              {/*  </button>*/}
+              {/*</div>*/}
+              <ShopDetail id={shop._id} name={shop.name} email={shop.email} password={shop.password} address={shop.address} phone={shop.phone} editModalHandler={editModalHandler}/>
             </div>
           ))}
           {isLoadingListShop && <div>Loading...</div>}

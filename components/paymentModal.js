@@ -15,6 +15,7 @@ export default function PaymentModal(props)
       address: data.address,
       phone: data.phone,
       isFulfilled: false,
+      dateCreate: new Date()
     }
 
     const res = await fetch('/api/bill', {

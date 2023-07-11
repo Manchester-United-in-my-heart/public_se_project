@@ -8,6 +8,7 @@ import Bill from "@/components/bill";
 import AdminHeader from "@/layout/headers/adminHeader";
 import ShopDetail from "@/components/shopDetail";
 import NotificationContext from "@/store/notification-context";
+import ShopHeader from "@/layout/headers/shopHeader";
 export default function Home(props) {
   const {data: session} = useSession()
   const notificationCtx = useContext(NotificationContext)
@@ -142,20 +143,28 @@ export default function Home(props) {
     )
   }
   else if (session.dispatchToken.user.role === 'shop') {
+    const [billList, setBillList] = useState(props.billList)
+    const fulfillHandler = async (id) => {
+      const res = await fetch(`http://localhost:3000/api/bill?billId=${id}`, {
+        method: 'PATCH'})
+
+      setBillList(billList.map((item) => {
+        if (item._id === id) {
+          item.isFulfilled = true
+        }
+        return item
+      }))
+    }
+
     return(
       <>
-        <button onClick={async () => {
-          await signOut()
-        }}>Sign Out
-        </button>
-        {props.billList.map(bill => (
+        <ShopHeader logoUrl={'/'} logoSrc={'/logo.png'} productUrl={'/product'} signOutHandler={signOut}/>
+
+        {billList.map(bill => (
           <div key={bill._id}>
-            <Bill cart={bill.cart} customerEmail={bill.customerEmail} address={bill.address} phone={bill.phone} totalPaid={bill.totalPaid} />
+            <Bill cart={bill.cart} customerEmail={bill.customerEmail} address={bill.address} phone={bill.phone} totalPaid={bill.totalPaid} isFulfilled={bill.isFulfilled} fulfillTrigger={async ()=>{await fulfillHandler(bill._id)}} />
           </div>
         ))}
-        <div>
-          <a href={'/product'}>Product</a>
-        </div>
       </>
     )
   }

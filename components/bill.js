@@ -1,8 +1,8 @@
 export default function Bill(props)
 {
-  const {cart, customerEmail, address, phone, totalPaid} = {...props}
+  const {cart, customerEmail, address, phone, totalPaid,isFulfilled, fulfillTrigger } = {...props}
   return (
-    <>
+    <div className={'flex justify-between gap-4'}>
       <div>
         Customer :  {customerEmail}
       </div>
@@ -22,6 +22,19 @@ export default function Bill(props)
         ))} </div>
       </div>
       <div>Total : {totalPaid}</div>
-    </>
+      <div>
+        {isFulfilled ?
+          (
+            <div>
+              <p> Đã hoàn thành </p>
+            </div>
+          ):
+          (
+            <div>
+              <button onClick={() => fulfillTrigger()}> Hoàn thành ngay </button>
+            </div>
+          )}
+      </div>
+    </div>
   )
 }

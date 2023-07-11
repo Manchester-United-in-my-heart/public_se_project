@@ -151,57 +151,36 @@ export default function Home(props) {
         </div>
 
         <div>
-          {listShop && listShop.map(shop => (
-            <div key={shop._id} className={'flex justify-around'}>
-              {/*<div>*/}
-              {/*  {shop.name}*/}
-              {/*</div>*/}
-              {/*<div>*/}
-              {/*  {shop.email}*/}
-              {/*</div>*/}
-              {/*<div>*/}
-              {/*  {shop.password}*/}
-              {/*</div>*/}
-              {/*<div>*/}
-              {/*  {shop.address}*/}
-              {/*</div>*/}
-              {/*<div>*/}
-              {/*  {shop.phone}*/}
-              {/*</div>*/}
-              {/*<div>*/}
-              {/*  <button onClick={() => {*/}
-              {/*    editModalHandler(*/}
-              {/*      {*/}
-              {/*        id: shop._id,*/}
-              {/*        name: shop.name, email: shop.email,*/}
-              {/*        password: shop.password,*/}
-              {/*        address: shop.address,*/}
-              {/*        phone: shop.phone*/}
-              {/*      })*/}
-              {/*  }}>*/}
-              {/*    Edit*/}
-              {/*  </button>*/}
-              {/*</div>*/}
-              <ShopDetail id={shop._id} name={shop.name} email={shop.email} password={shop.password} address={shop.address} phone={shop.phone} editModalHandler={editModalHandler}/>
+          <div>
+            <div className={'px-20 columns-6 text-center'}>
+              <div>
+                Tên Shop
+              </div>
+              <div>
+                Tên người dùng
+              </div>
+              <div>
+                Mật khẩu
+              </div>
+              <div>
+                Địa chỉ
+              </div>
+              <div>
+                Số điện thoại
+              </div>
             </div>
-          ))}
-          {isLoadingListShop && <div>Loading...</div>}
+          </div>
+          <div className={'flex flex-col gap-4 mt-4'}>
+            {listShop && listShop.map(shop => (
+              <div key={shop._id} className={'px-20 columns-6 break-after-column text-center'}>
+                <ShopDetail id={shop._id} name={shop.name} email={shop.email} password={shop.password} address={shop.address} phone={shop.phone} editModalHandler={editModalHandler}/>
+              </div>))}
+          </div>
 
-          <div className={'flex justify-center'}>
-            <div className={'w-1/2'}>
-              <button onClick={() => {
-                addModalHandler(
-                  {
-                    name: '',
-                    email: '',
-                    password: '',
-                    address: '',
-                    phone: ''
-                  }
-                )
-              }}>Add
+          <div className={'flex justify-center mt-20'}>
+              <button className={'px-6 py-2 border-[1px] rounded-2xl border-black hover:bg-blue-600 transition-all duration-300'} onClick={() => {addModalHandler({name: '', email: '', password: '', address: '', phone: ''})}}>
+                Add
               </button>
-            </div>
           </div>
         </div>
       </>

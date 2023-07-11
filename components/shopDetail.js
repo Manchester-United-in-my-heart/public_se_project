@@ -2,7 +2,7 @@ export default function ShopDetail(props) {
   const {id, name, email, password, address, phone, editModalHandler} = {...props}
 
   return (
-    <div className={'flex justify-center gap-x-2'}>
+    <>
       <div>
         {name}
       </div>
@@ -19,8 +19,8 @@ export default function ShopDetail(props) {
         {phone}
       </div>
       <div>
-        <button onClick={() => {editModalHandler({id, name, email, password, address, phone})}}>Edit</button>
+        <button className={'px-4 py-2 border-[1px] rounded-2xl border-black hover:bg-blue-600 transition-all duration-300'} onClick={() => {editModalHandler({id, name, email, password, address, phone})}}>Edit</button>
       </div>
-    </div>
+    </>
   )
 }

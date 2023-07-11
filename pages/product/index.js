@@ -1,51 +1,15 @@
 import {getSession, signOut, useSession} from "next-auth/react";
 import {useState} from "react";
-
+import ShopHeader from "@/layout/headers/shopHeader";
+import ProductFragment from "@/layout/fragments/productList";
 export default function (props)
 {
-  console.log(props)
   const {data: session} = useSession()
   const [productList, setProductList] = useState([...props.productList])
-  const shopId = session.dispatchToken.user._id
   return(
     <>
-      <div className={'p-4 flex justify-around'}>
-        <div className={'text-2xl'}>
-          {shopId} ({session.dispatchToken.user.role})
-        </div>
-        <div className={'flex'}>
-          <div>
-            <button onClick={async () => {
-              await signOut()
-            }}>Sign Out
-            </button>
-          </div>
-        </div>
-      </div>
-      <div>
-        {productList && productList.map(product => (
-          <div key={product._id} className={'flex justify-around'}>
-            <div>
-              {product.productName}
-            </div>
-            <div>
-              {product.productPrice}
-            </div>
-            <div>
-              {product.productDescription}
-            </div>
-            <div>
-              <img src={product.productImage} alt={'product image'}/>
-            </div>
-            <div>
-              <a href={'/product/' + product._id}> View </a>
-            </div>
-          </div>))}
-      </div>
-
-      <div>
-        <a href={'/product/add'}> Add </a>
-      </div>
+      <ShopHeader logoUrl={'/'} logoSrc={'/logo.png'} productUrl={'/product'} signOutHandler={signOut}/>
+      <ProductFragment productList={productList} addUrl={`/product/add`}/>
     </>
   )
 }

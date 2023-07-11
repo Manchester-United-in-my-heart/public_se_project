@@ -26,7 +26,7 @@ export default function Bill(props)
           Số điện thoại :  {phone}
         </div>
         <div>
-          <button onClick={()=>{setCartModalProps(cart); setIsCartModalOn(true)}}>Danh sách mua</button>
+          <button onClick={()=>{setCartModalProps(cart); setIsCartModalOn(true)}}>Xem danh sách</button>
         </div>
         <div>Tổng thanh toán : {totalPaid}</div>
         <div>

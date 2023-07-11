@@ -127,7 +127,7 @@ export default function Home(props) {
           </div>
           <div className={'flex flex-col gap-4 mt-4'}>
             {listShop && listShop.map(shop => (
-              <div key={shop._id} className={'px-20 columns-6 break-after-column text-center'}>
+              <div key={shop._id} className={'px-20 grid grid-cols-6 text-center'}>
                 <ShopDetail id={shop._id} name={shop.name} email={shop.email} password={shop.password} address={shop.address} phone={shop.phone} editModalHandler={editModalHandler}/>
               </div>))}
           </div>

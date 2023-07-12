@@ -1,11 +1,13 @@
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {getDownloadURL, ref, uploadBytesResumable} from "firebase/storage";
 import {storage} from "@/firebase.config";
 import {getSession, signOut} from "next-auth/react";
 import ShopHeader from "@/layout/headers/shopHeader";
 import AddProductFragment from "@/layout/fragments/addProduct";
+import NotificationContext from "@/store/notification-context";
 export default function (props)
 {
+  const notificationContext = useContext(NotificationContext)
   const [product,setProduct] = useState(
     {
       productId: '',
@@ -23,6 +25,13 @@ export default function (props)
   const addHandler = async (data) =>
   {
     if(isUsedFile) {
+      notificationContext.showNotification({
+        isLoading: true,
+        isSuccess: false,
+        successMessage: '',
+        isError: false,
+        errorMessage: '',
+      })
       if (!file) {
         alert("Please upload an image first!");
       }
@@ -44,6 +53,13 @@ export default function (props)
         })
     } else
     {
+      notificationContext.showNotification({
+        isLoading: true,
+        isSuccess: false,
+        successMessage: '',
+        isError: false,
+        errorMessage: '',
+      })
       await fetch(`http://localhost:3000/api/product`,
         {
           method: 'POST',
@@ -57,7 +73,13 @@ export default function (props)
           )
         })
     }
-
+    notificationContext.showNotification({
+      isLoading: false,
+      isSuccess: true,
+      successMessage: 'Tải lên thành công',
+      isError: false,
+      errorMessage: '',
+    })
   }
 
   return (

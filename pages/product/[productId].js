@@ -1,11 +1,13 @@
 import {getSession, signOut} from "next-auth/react";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import { storage } from "@/firebase.config";
 import { ref, uploadBytesResumable, getDownloadURL} from "firebase/storage";
 import ShopHeader from "@/layout/headers/shopHeader";
 import EditProductFragment from "@/layout/fragments/editProduct";
+import NotificationContext from "@/store/notification-context";
 export default function (props)
 {
+  const notificationContext = useContext(NotificationContext)
   const [product,setProduct] = useState(
     {
       productId: props._id,
@@ -26,6 +28,13 @@ export default function (props)
       if (!file) {
         alert("Please upload an image first!");
       }
+      notificationContext.showNotification({
+        isLoading: true,
+        isSuccess: false,
+        successMessage: '',
+        isError: false,
+        errorMessage: '',
+      })
       const storageRef = ref(storage, `/files/${file.name}${new Date}`);
       await uploadBytesResumable(storageRef, file)
       const newUrl = await getDownloadURL(storageRef)
@@ -43,6 +52,13 @@ export default function (props)
         })
     } else
     {
+      notificationContext.showNotification({
+        isLoading: true,
+        isSuccess: false,
+        successMessage: '',
+        isError: false,
+        errorMessage: '',
+      })
       await fetch(`http://localhost:3000/api/product?productId=${product.productId}`,
         {
           method: 'PUT',
@@ -56,7 +72,13 @@ export default function (props)
           )
         })
     }
-
+    notificationContext.showNotification({
+      isLoading: false,
+      isSuccess: true,
+      successMessage: 'Lưu thành công',
+      isError: false,
+      errorMessage: '',
+    })
   }
 
   const deleteHandler = async (data) =>

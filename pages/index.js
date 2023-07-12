@@ -147,8 +147,41 @@ export default function Home(props) {
   else if (session.dispatchToken.user.role === 'shop') {
     const [billList, setBillList] = useState(props.billList)
     const fulfillHandler = async (id) => {
+
+      notificationCtx.showNotification(
+        {
+          isLoading: true,
+          isSuccess: false,
+          successMessage: '',
+          isError: false,
+          errorMessage: '',
+        }
+      )
+
       const res = await fetch(`http://localhost:3000/api/bill?billId=${id}`, {
         method: 'PATCH'})
+
+      if (!res.ok) {
+        notificationCtx.showNotification(
+          {
+            isLoading: false,
+            isSuccess: false,
+            successMessage: '',
+            isError: true,
+            errorMessage: 'Đã có lỗi xảy ra',
+          }
+        )
+      } else {
+        notificationCtx.showNotification(
+          {
+            isLoading: false,
+            isSuccess: true,
+            successMessage: 'Đã hoàn thành đơn hàng',
+            isError: false,
+            errorMessage: '',
+          }
+        )
+      }
 
       setBillList(billList.map((item) => {
         if (item._id === id) {
@@ -163,8 +196,8 @@ export default function Home(props) {
     return(
       <>
         {isCartModalOn && <ReadOnlyCartModal cartModalProps={cartModalProps} showHandler={setIsCartModalOn}/>}
-        <ShopHeader logoUrl={'/'} logoSrc={'/logo.png'} productUrl={'/product'} signOutHandler={signOut}/>
-        <BillFragment billList={billList} fulfillHandler={fulfillHandler} setIsCartModalOn={setIsCartModalOn} setCartModalProps={setCartModalProps}/>
+        <ShopHeader logoUrl={'/'} logoSrc={'/logo.png'} productUrl={'/product'} signOutHandler={signOut} />
+        <BillFragment billList={billList} fulfillHandler={fulfillHandler} setIsCartModalOn={setIsCartModalOn} setCartModalProps={setCartModalProps} />
       </>
     )
   }

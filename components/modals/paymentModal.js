@@ -1,13 +1,26 @@
 import {useForm} from "react-hook-form";
 import {useSession} from "next-auth/react";
 import {ImCancelCircle} from 'react-icons/im'
+import {useContext} from "react";
+import NotificationContext from "@/store/notification-context";
 export default function PaymentModal(props)
 {
-  console.log(props)
+  const notificationContext = useContext(NotificationContext)
   const session = useSession()
   const {cart, shopId, shopName, totalPaid, setIsPaymentModalOn, setIsDeleteTriggerOn} = {...props}
   const {register, handleSubmit, watch, setValue}= useForm();
   const onSubmit = async (data) => {
+
+    notificationContext.showNotification(
+      {
+        isLoading: true,
+        isSuccessful: false,
+        successMessage: '',
+        isError: false,
+        errorMessage: '',
+      }
+    )
+
     const billBody = {
       shopId: shopId,
       customerId: session.data.dispatchToken.user._id,
@@ -24,9 +37,18 @@ export default function PaymentModal(props)
       method: 'POST',
       body: JSON.stringify(billBody)
     })
-
     setIsDeleteTriggerOn(true)
     setIsPaymentModalOn(false)
+    notificationContext.showNotification(
+      {
+        isLoading: false,
+        isSuccessful: true,
+        successMessage: 'Đặt hàng thành công, chúng tôi sẽ liên hệ với bạn sớm nhất có thể để xác nhận đơn hàng. Cảm ơn bạn đã mua hàng tại shop!',
+        isError: false,
+        errorMessage: '',
+      }
+    )
+    location.reload()
   }
 
   return (

@@ -1,7 +1,11 @@
 import {useForm} from "react-hook-form";
-import PaymentModal from "@/components/paymentModal";
-import {useEffect, useState} from "react";
+import PaymentModal from "@/components/modals/paymentModal";
+import {useContext, useEffect, useState} from "react";
+import {ImCancelCircle} from 'react-icons/im'
+import NotificationContext from "@/store/notification-context";
 export default function CartModal(props) {
+
+  const notificationContext = useContext(NotificationContext)
 
   const {register, handleSubmit, watch, setValue}= useForm();
 
@@ -61,10 +65,9 @@ export default function CartModal(props) {
 
     const totalPaid = cartList.reduce((total, item) => total + item.price * item.quantity, 0)
 
-
     setPaymentModalProps({
       ...paymentModalProps,
-      shopName: cartList[0].shopName,
+      shopName: props.shopList.filter(shop => shop._id === shopId)[0].name,
       cart: cartList,
       shopId: shopId,
       totalPaid: totalPaid
@@ -95,6 +98,15 @@ export default function CartModal(props) {
   useEffect( () =>
   {
     if (cart === newCartList) return
+    notificationContext.showNotification(
+      {
+        isLoading: true,
+        isSuccess: false,
+        successMessage: '',
+        isError: false,
+        errorMessage: '',
+      }
+    )
     const preparedCart = {}
     for (const shop in cart) {
       preparedCart[cart[shop].shopId] = cart[shop].cartList
@@ -110,7 +122,16 @@ export default function CartModal(props) {
         body: JSON.stringify(body)
       })
     }
-    process()
+    process().then(() => {
+    notificationContext.showNotification(
+      {
+        isLoading: false,
+        isSuccess: false,
+        successMessage: '',
+        isError: false,
+        errorMessage: '',
+      }
+    )})
   }, [cart, isDeleteTriggerOn])
   return (
     <>
@@ -152,7 +173,9 @@ export default function CartModal(props) {
               ))}
             </form>
             <div className={'flex justify-center'}>
-              <button className={'px-2 py-1 border-black border-[2px] rounded-full hover:bg-yellow-500 hover:text-white transition-all duration-300 mt-2'} onClick={()=>{setIsCartModalOn(false)}}> Đóng </button>
+              <button className={'flex justify-center gap-4 items-center px-2 py-1 border-black border-[2px] rounded-full hover:bg-red-500 hover:text-white transition-all duration-300 mt-2'} onClick={()=>{setIsCartModalOn(false)}}>
+                Đóng <span><ImCancelCircle size={30} /> </span>
+              </button>
             </div>
         </div>
       </div>

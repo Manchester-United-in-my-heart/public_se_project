@@ -1,4 +1,4 @@
-import PaymentModal from "@/components/paymentModal";
+import PaymentModal from "@/components/modals/paymentModal";
 
 export default function (){
   return(

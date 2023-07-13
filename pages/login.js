@@ -71,7 +71,7 @@ export default function ()
        </div>
      </form>
      <div>
-        <button className={'border-2 border-black px-4 py-2 rounded-full hover:bg-blue-400 duration-300 transition-all'} onClick={handleSubmit(onSubmit)}>Đăng nhập</button>
+        <button className={'border-2 border-black px-4 py-2 rounded-full hover:bg-blue-400 hover:text-white duration-300 transition-all'} onClick={handleSubmit(onSubmit)}>Đăng nhập</button>
      </div>
 
      <a className={'hover:text-blue-600 transition-all duration-300'} href={'/register'}> Bạn chưa có tài khoản ? Đăng ký ngay!</a>

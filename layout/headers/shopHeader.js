@@ -14,7 +14,6 @@ export default function ShopHeader(props)
           <button onClick={async ()=>{await signOutHandler()}}>Sign Out</button>
         </div>
       </div>
-
     </div>
   )
 }

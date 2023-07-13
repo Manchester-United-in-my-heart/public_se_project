@@ -1,9 +1,7 @@
-import {get, useForm} from "react-hook-form";
 import EditModal from "@/components/modals/editModal";
 import AddModal from "@/components/modals/addModal";
 import {useContext, useEffect, useState} from "react";
 import {getSession, useSession, signOut} from "next-auth/react";
-import Bill from "@/components/bill";
 import AdminHeader from "@/layout/headers/adminHeader";
 import ShopDetail from "@/components/shopDetail";
 import NotificationContext from "@/store/notification-context";
@@ -11,6 +9,7 @@ import ShopHeader from "@/layout/headers/shopHeader";
 import BillFragment from "@/layout/fragments/billList";
 import ReadOnlyCartModal from "@/components/modals/readOnlyCartModal";
 import CartModal from "@/components/modals/cartModal";
+import CustomerHeader from "@/layout/headers/customerHeader";
 export default function Home(props) {
   const {data: session} = useSession()
   const notificationCtx = useContext(NotificationContext)
@@ -201,18 +200,14 @@ export default function Home(props) {
       </>
     )
   }
+
+
+  console.log(props)
   const [isCartModalOn, setIsCartModalOn] = useState(false)
   return (
         <>
-          <div className={'flex gap-4'}>
-            {isCartModalOn && <CartModal cartId={props.session.dispatchToken.user._id} cartList={props.cartList} shopList={props.shopList} setIsCartModalOn={setIsCartModalOn} purchaseHandler={()=>{}}/>}
-            <button onClick={()=>{setIsCartModalOn(true)}}> Your Cart</button>
-            <button onClick={async () => {
-              await signOut()
-            }}>Sign Out
-            </button>
-          </div>
-
+          {isCartModalOn && <CartModal cartId={props.session.dispatchToken.user._id} cartList={props.cartList} shopList={props.shopList} setIsCartModalOn={setIsCartModalOn} purchaseHandler={()=>{}}/>}
+          <CustomerHeader logoUrl={'/'} logoSrc={'/logo.png'} showCartHandler={setIsCartModalOn} signOutHandler={signOut}/>
           <div>
             {props.shopList.map(shop => (
               <div key={shop._id}>

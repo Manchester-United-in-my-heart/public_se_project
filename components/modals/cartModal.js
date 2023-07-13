@@ -74,7 +74,6 @@ export default function CartModal(props) {
   }
   if (isDeleteTriggerOn === true)
   {
-    console.log('delete trigger on')
     let cloneCart = [...cart]
     cloneCart = cloneCart.filter(shop => shop.shopId !== idDeletedShop)
     setCart(cloneCart)
@@ -91,10 +90,8 @@ export default function CartModal(props) {
       }
     }
     setCart(cloneCart)
-    console.log(cart)
   }
 
-  console.log(cart === newCartList)
   useEffect( () =>
   {
     if (cart === newCartList) return
@@ -117,38 +114,48 @@ export default function CartModal(props) {
   }, [cart, isDeleteTriggerOn])
   return (
     <>
-      {isPaymentModalOn && <PaymentModal {...paymentModalProps}/>}
-    <div className={'border-4'}>
-      <form>
-        {cart.map(shop => (
-          <div id={shop.shopId}>
-            <p className={'text-xl'}>{shop.shopName}</p>
-            <div>
-              {shop.cartList.map((item) => (
-                <>
-                  <div id={item.productId}>
-                    <p>Name:{item.productName}</p>
-                    <input type={'number'} defaultValue={item.quantity} {...register(item.productId, {setValueAs: v=>parseInt(v)})}/>
-                    <p>Price:{item.price}</p>
-                  </div>
+    {isPaymentModalOn && <PaymentModal {...paymentModalProps}/>}
+      <div className={'absolute top-0 left-0 w-full h-full bg-black bg-opacity-80'}>
+        <div className={'absolute border-blue-800 border-[4px] rounded-xl top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-20 bg-white'}>
+          <form>
+          {cart.map(shop => (
+                <div className={'px-4 py-2 border-green-300 border-[2px] mb-2'} id={shop.shopId}>
+                  <p className={'text-xl'}>{shop.shopName}</p>
                   <div>
-                    <button onClick={handleSubmit(() =>{deleteHandler(item.productId)})}>Delete</button>
+                    {shop.cartList.map((item) => (
+                      <div className={'px-4 py-2 border-black border-[1px] mt-2'}>
+                        <div id={item.productId}>
+                          <div className={'flex justify-between'}>
+                            <div>Tên sản phẩm: </div>
+                            <div>{item.productName}</div>
+                          </div>
+                          <div className={'flex justify-between gap-4'}>
+                            <label htmlFor={'quantity'}>Số lượng</label>
+                            <input className={'border-[1px] border-blue-400 px-4'} id={'quantity'} type={'number'} defaultValue={item.quantity} {...register(item.productId, {setValueAs: v=>parseInt(v)})}/>
+                          </div>
+                          <div className={'flex justify-between'}>
+                            <div>Đơn giá:</div>
+                            <div>{item.price}</div>
+                          </div>
+                        </div>
+                        <div className={'flex justify-end'}>
+                          <button className={'px-2 py-1 border-black border-[2px] rounded-full hover:bg-red-600 hover:text-white transition-all duration-300'} onClick={handleSubmit(() =>{deleteHandler(item.productId)})}>Delete</button>
+                        </div>
+                      </div>
+                      )
+                    )}
                   </div>
-                </>
-                )
-
-              )}
+                  <div className={'flex justify-center'}>
+                    <button className={'px-2 py-1 border-black border-[2px] rounded-full hover:bg-green-600 hover:text-white transition-all duration-300 mt-2'} onClick={handleSubmit(async(data)=>{await purchaseHandler(data, shop.shopId )})}> Đặt mua </button>
+                  </div>
+                </div>
+              ))}
+            </form>
+            <div className={'flex justify-center'}>
+              <button className={'px-2 py-1 border-black border-[2px] rounded-full hover:bg-yellow-500 hover:text-white transition-all duration-300 mt-2'} onClick={()=>{setIsCartModalOn(false)}}> Đóng </button>
             </div>
-            <div>
-              <button onClick={handleSubmit(async(data)=>{await purchaseHandler(data, shop.shopId )})}>Purchase</button>
-            </div>
-          </div>
-        ))}
-      </form>
-      <div>
-        <button onClick={()=>{setIsCartModalOn(false)}}>Close</button>
+        </div>
       </div>
-    </div>
     </>
   )
 }

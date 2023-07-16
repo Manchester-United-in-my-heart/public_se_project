@@ -11,9 +11,9 @@ export default function ShopFragment(props)
       </div>
       <div className={'flex gap-4 flex-wrap mb-10'}>
         {shopList.map(shop => (
-          <div key={shop._id}>
+          <a href={`shop/${shop._id}`} key={shop._id}>
             <ShopCard shopName={shop.name} shopAddress={shop.address} shopPhone={shop.phone} />
-          </div>
+          </a>
         ))}
       </div>
     </>

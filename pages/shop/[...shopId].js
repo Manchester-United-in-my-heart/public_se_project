@@ -1,13 +1,14 @@
 import {getSession} from "next-auth/react";
-import {set, useForm} from 'react-hook-form'
-import {useEffect, useState} from "react";
+import {useForm} from 'react-hook-form'
+import {useContext, useEffect, useState} from "react";
+import NotificationContext from "@/store/notification-context";
+import ProductSelectFragment from "@/layout/fragments/productSelect";
 export default function (props)
 {
-  console.log('props', props)
   const {register, handleSubmit, watch, setValue}= useForm();
-
+  const notificationContext = useContext(NotificationContext)
   const [currentCart, setCurrentCart] = useState({...props.cart.cartList})
-
+  const [initialCart, setInitialCart] = useState({...props.cart.cartList})
   const onSubmit = async (data) =>
     {
       console.log(data)
@@ -55,38 +56,45 @@ export default function (props)
     };
 
   useEffect(
-    () =>
-    {
-      const process = async () =>
-      {
-        await fetch(`http://localhost:3000/api/customer?cartId=${props.cart.cartId}`,{
-          method: 'PATCH',
-          body: JSON.stringify({
-            cartList: currentCart
+    () => {
+      if (Object.keys(currentCart).length !== Object.keys(initialCart).length) {
+        const process = async () => {
+          await fetch(`http://localhost:3000/api/customer?cartId=${props.cart.cartId}`, {
+            method: 'PATCH',
+            body: JSON.stringify({
+              cartList: currentCart
+            })
           })
-        })
-      }
+        }
 
-      process()
+        notificationContext.showNotification(
+          {
+            isLoading: true,
+            isSuccess: false,
+            successMessage: '',
+            isError: false,
+            errorMessage: '',
+          }
+        )
+        process().then(
+          () => {
+            notificationContext.showNotification(
+              {
+                isLoading: false,
+                isSuccess: true,
+                successMessage: 'Đã thêm vào giỏ hàng',
+                isError: false,
+                errorMessage: '',
+              }
+            )
+          }
+        )
+      }
     }
     , [currentCart])
 
   return(
-    <form>
-      {
-        props.productList.map((product) =>
-            <div className={'flex gap-3'} key={product._id}>
-              <h1>{product.productName}</h1>
-              <p>{product.productDescription}</p>
-              <p>{product.productPrice}/{product.productUnit}</p>
-              <img className={'w-[50%]'} src={product.productImage} alt={product.productName}/>
-              <label htmlFor={product._id}>Quantity</label>
-              <input id={product._id} type={'number'} defaultValue={0} placeholder={'Quantity'} {...register(product._id, {setValueAs: v=>parseInt(v)})}/>
-              <button type={'submit'} onClick={handleSubmit(onSubmit)}>Add to Cart</button>
-            </div>
-        )
-      }
-    </form>
+    <ProductSelectFragment shopName={props.shopName} productList={props.productList} register={register} handleSubmit={handleSubmit} onSubmit={onSubmit} />
   )
 }
 
@@ -104,14 +112,13 @@ export async function getServerSideProps({req,params})
 
   const cart = await cartRes.json()
 
-  console.log('api get', cart)
-
   return {
     props: {
       session:session,
       shopId:shopId,
       productList: productList.productList,
-      cart: cart.cart
+      cart: cart.cart,
+      shopName: productList.shopName
     }
   }
 }

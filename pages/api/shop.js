@@ -1,4 +1,4 @@
-import {MongoClient} from "mongodb";
+import {MongoClient, ObjectId} from "mongodb";
 
 export default async function (req,res){
   if (req.method === 'GET')
@@ -9,15 +9,20 @@ export default async function (req,res){
 
     const db = client.db()
 
-    const collection = db.collection('productpool')
+    let collection = db.collection('productpool')
 
     const productList = await collection.find({shopId: shopId}).toArray()
+
+    collection = db.collection('shop')
+
+    const shop = await collection.findOne({_id: new ObjectId(shopId)})
 
     await client.close()
 
     res.status(200).json(
       {
         productList: productList,
+        shopName: shop.name
       }
     )
   }

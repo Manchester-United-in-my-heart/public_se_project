@@ -1,6 +1,6 @@
 import EditModal from "@/components/modals/editModal";
 import AddModal from "@/components/modals/addModal";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useState} from "react";
 import {getSession, useSession, signOut} from "next-auth/react";
 import AdminHeader from "@/layout/headers/adminHeader";
 import ShopDetail from "@/components/shopDetail";
@@ -201,7 +201,6 @@ export default function Home(props) {
       </>
     )
   }
-  console.log(props)
   const [isCartModalOn, setIsCartModalOn] = useState(false)
   return (
         <>

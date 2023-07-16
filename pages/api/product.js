@@ -23,7 +23,6 @@ export default async function (req, res){
   }
   else if (req.method === 'POST')
   {
-    console.log(req.body)
     const client = await MongoClient.connect('mongodb+srv://khambui2003:Emtraitoi123@office.9dnkbti.mongodb.net/seproject?retryWrites=true&w=majority')
 
     const db = client.db()
@@ -33,8 +32,6 @@ export default async function (req, res){
     await collection.insertOne(JSON.parse(req.body))
 
     await client.close()
-
-    console.log('done')
 
     res.status(200).json(
       {
@@ -67,7 +64,6 @@ export default async function (req, res){
   {
     const productId = req.query.productId
 
-    console.log(productId)
 
     const client = await MongoClient.connect('mongodb+srv://khambui2003:Emtraitoi123@office.9dnkbti.mongodb.net/seproject?retryWrites=true&w=majority')
 

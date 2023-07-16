@@ -11,7 +11,6 @@ export default function (props)
   const [initialCart, setInitialCart] = useState({...props.cart.cartList})
   const onSubmit = async (data) =>
     {
-      console.log(data)
       props.productList.map((product) =>
         {
           setValue(product._id,0)
@@ -27,7 +26,6 @@ export default function (props)
         {
           if (!Object.hasOwn(currentCart, props.shopId))
           {
-            console.log('not added yet')
             const newCart = {...currentCart}
             newCart[props.shopId] = [{productId: productId,productName: productDetails.productName, quantity: quantity, price: productDetails.productPrice}]
             setCurrentCart(newCart)

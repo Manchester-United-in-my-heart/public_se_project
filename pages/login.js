@@ -25,7 +25,6 @@ export default function ()
 
     if (!status.ok)
     {
-      console.log(status.error)
       notificationCtx.showNotification(
         {
           isLoading: false,

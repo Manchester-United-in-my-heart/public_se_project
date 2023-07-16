@@ -1,6 +1,5 @@
 import {useForm} from "react-hook-form";
 import {useEffect} from "react";
-
 export default function AddProductForm(props)
 {
   const {product, addHandler, file, setFile, isUsedFile,setIsUsedFile} = {...props}

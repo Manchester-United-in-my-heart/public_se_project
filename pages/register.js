@@ -10,7 +10,6 @@ export default function (props)
     const {register, handleSubmit, watch,formState:{errors}, setValue}= useForm({mode: "onBlur"});
     const onSubmit = async (data) => {
       if (data.password !== data.repassword) {
-        console.log('password not match')
         return
       }
 

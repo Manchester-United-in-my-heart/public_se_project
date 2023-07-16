@@ -10,6 +10,7 @@ import BillFragment from "@/layout/fragments/billList";
 import ReadOnlyCartModal from "@/components/modals/readOnlyCartModal";
 import CartModal from "@/components/modals/cartModal";
 import CustomerHeader from "@/layout/headers/customerHeader";
+import ShopFragment from "@/layout/fragments/shopList";
 export default function Home(props) {
   const {data: session} = useSession()
   const notificationCtx = useContext(NotificationContext)
@@ -200,21 +201,13 @@ export default function Home(props) {
       </>
     )
   }
-
-
   console.log(props)
   const [isCartModalOn, setIsCartModalOn] = useState(false)
   return (
         <>
           {isCartModalOn && <CartModal cartId={props.session.dispatchToken.user._id} cartList={props.cartList} shopList={props.shopList} setIsCartModalOn={setIsCartModalOn} purchaseHandler={()=>{}}/>}
           <CustomerHeader logoUrl={'/'} logoSrc={'/logo.png'} showCartHandler={setIsCartModalOn} signOutHandler={signOut}/>
-          <div>
-            {props.shopList.map(shop => (
-              <div key={shop._id}>
-                <a href = {`/shop/${shop._id}`}>{shop.name}</a>
-              </div>))
-            }
-          </div>
+          <ShopFragment shopList={props.shopList} />
         </>
   )
 }

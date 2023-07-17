@@ -15,13 +15,13 @@ export default function ()
   {
     notificationCtx.showNotification({isLoading: true, isError: false, errorMessage: ''})
     const status =  await signIn('credentials',
-        {
-          redirect: false,
-          email: data.email,
-          password: data.password,
-          role: data.role,
-          callbackUrl: `${process.env.BASE_URL}`
-        })
+      {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+        role: data.role,
+        callbackUrl: process.env.BASE_URL
+      })
 
     if (!status.ok)
     {
@@ -46,36 +46,36 @@ export default function ()
     }
   }
 
- return (
-   <div className={'flex flex-col items-center mt-40 gap-4'}>
-     <div className={'text-2xl'}>
+  return (
+    <div className={'flex flex-col items-center mt-40 gap-4'}>
+      <div className={'text-2xl'}>
         Đăng nhập
-     </div>
-     <form className={'w-3/12 flex flex-col gap-4 '} onSubmit={handleSubmit(onSubmit)}>
-       <div className={'flex w-full gap-4 justify-between'}>
-         <label htmlFor={'username'}> Tên tài khoản:</label>
-         <input id={'username'} type={'text'} className={'border-[1px] border-black'} {...register('email')}/>
-       </div>
-       <div className={'flex w-full gap-4 justify-between'}>
-         <label htmlFor={'password'}>Mật khẩu:</label>
-         <input id={'password'} type={'password'} className={'border-[1px] border-black'} {...register('password')}/>
-       </div>
-       <div className={'flex gap-4 justify-between'}>
-         <label htmlFor={'role'}>Bạn là:</label>
-         <select className={'px-4'} id={'role'} {...register('role')}>
-           <option value={'customer'}>Khách hàng</option>
-           <option value={'admin'}>Quản trị viên</option>
-           <option value={'shop'}>Chủ shop</option>
-         </select>
-       </div>
-     </form>
-     <div>
+      </div>
+      <form className={'w-3/12 flex flex-col gap-4 '} onSubmit={handleSubmit(onSubmit)}>
+        <div className={'flex w-full gap-4 justify-between'}>
+          <label htmlFor={'username'}> Tên tài khoản:</label>
+          <input id={'username'} type={'text'} className={'border-[1px] border-black'} {...register('email')}/>
+        </div>
+        <div className={'flex w-full gap-4 justify-between'}>
+          <label htmlFor={'password'}>Mật khẩu:</label>
+          <input id={'password'} type={'password'} className={'border-[1px] border-black'} {...register('password')}/>
+        </div>
+        <div className={'flex gap-4 justify-between'}>
+          <label htmlFor={'role'}>Bạn là:</label>
+          <select className={'px-4'} id={'role'} {...register('role')}>
+            <option value={'customer'}>Khách hàng</option>
+            <option value={'admin'}>Quản trị viên</option>
+            <option value={'shop'}>Chủ shop</option>
+          </select>
+        </div>
+      </form>
+      <div>
         <button className={'border-2 border-black px-4 py-2 rounded-full hover:bg-blue-400 hover:text-white duration-300 transition-all'} onClick={handleSubmit(onSubmit)}>Đăng nhập</button>
-     </div>
+      </div>
 
-     <a className={'hover:text-blue-600 transition-all duration-300'} href={'/register'}> Bạn chưa có tài khoản ? Đăng ký ngay!</a>
-   </div>
- )
+      <a className={'hover:text-blue-600 transition-all duration-300'} href={'/register'}> Bạn chưa có tài khoản ? Đăng ký ngay!</a>
+    </div>
+  )
 }
 
 export async function getServerSideProps({req}){
@@ -84,7 +84,7 @@ export async function getServerSideProps({req}){
   if (session) {
     return {
       redirect:{
-        destination: `${process.env.BASE_URL}`,
+        destination: process.env.BASE_URL,
         permanent: true
       }
     }
@@ -93,4 +93,5 @@ export async function getServerSideProps({req}){
   return {
     props: {}
   }
+
 }

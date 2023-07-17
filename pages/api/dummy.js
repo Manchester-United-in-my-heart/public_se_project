@@ -1,7 +1,8 @@
-export async function DemoCall()
+export default function (req, res)
 {
-  const res = await fetch('/api/admin')
-  const data = await res.json()
-  console.log(data)
-  return res
+  res.status(200).json(
+    {
+      mess: process.env.BASE_URL
+    }
+  )
 }

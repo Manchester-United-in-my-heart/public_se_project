@@ -43,7 +43,7 @@ export default function Home(props) {
 
     const deleteApi = async (id) => {
       setIsLoadingListShop(true)
-      const res = await fetch(`http://localhost:3000/api/admin?id=${id}`, {
+      const res = await fetch(`/api/admin?id=${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
@@ -56,7 +56,7 @@ export default function Home(props) {
     }
     const editApi = async (id, name, email, password, address, phone) => {
       setIsLoadingListShop(true)
-      const res = await fetch(`http://localhost:3000/api/admin`, {
+      const res = await fetch(`/api/admin`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -79,7 +79,7 @@ export default function Home(props) {
     }
     const addApi = async (name, email, password, address, phone) => {
       setIsLoadingListShop(true)
-      const res = await fetch(`http://localhost:3000/api/admin`, {
+      const res = await fetch(`/api/admin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -158,7 +158,7 @@ export default function Home(props) {
         }
       )
 
-      const res = await fetch(`http://localhost:3000/api/bill?billId=${id}`, {
+      const res = await fetch(`/api/bill?billId=${id}`, {
         method: 'PATCH'})
 
       if (!res.ok) {
@@ -225,7 +225,7 @@ export async function getServerSideProps({req}) {
 
   if (session.dispatchToken.user.role === 'admin') {
 
-  const res = await fetch('http://localhost:3000/api/admin')
+  const res = await fetch('/api/admin')
 
   const data = await res.json()
 
@@ -236,10 +236,10 @@ export async function getServerSideProps({req}) {
     }
   }}
   else if (session.dispatchToken.user.role === 'shop') {
-    const res = await fetch(`http://localhost:3000/api/shop?shopID=${session.dispatchToken.user._id}`)
+    const res = await fetch(`/api/shop?shopID=${session.dispatchToken.user._id}`)
     const data = await res.json()
 
-    const resBill = await fetch(`http://localhost:3000/api/bill?shopId=${session.dispatchToken.user._id}`)
+    const resBill = await fetch(`/api/bill?shopId=${session.dispatchToken.user._id}`)
     const dataBill = await resBill.json()
 
     return {
@@ -252,9 +252,9 @@ export async function getServerSideProps({req}) {
   }
 
   else if (session.dispatchToken.user.role === 'customer') {
-    const shopRes = await fetch(`http://localhost:3000/api/admin`)
+    const shopRes = await fetch(`/api/admin`)
     const shopData = await shopRes.json()
-    const cartRes = await fetch(`http://localhost:3000/api/customer?cartId=${session.dispatchToken.user._id}`)
+    const cartRes = await fetch(`/api/customer?cartId=${session.dispatchToken.user._id}`)
     const cartData = await cartRes.json()
     return {
       props: {

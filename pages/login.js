@@ -20,7 +20,7 @@ export default function ()
           email: data.email,
           password: data.password,
           role: data.role,
-          callbackUrl: "http://localhost:3000"
+          callbackUrl: "/"
         })
 
     if (!status.ok)
@@ -84,7 +84,7 @@ export async function getServerSideProps({req}){
   if (session) {
     return {
       redirect:{
-        destination: 'http://localhost:3000',
+        destination: '/',
         permanent: true
       }
     }

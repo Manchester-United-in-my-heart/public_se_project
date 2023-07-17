@@ -225,7 +225,7 @@ export async function getServerSideProps({req}) {
 
   if (session.dispatchToken.user.role === 'admin') {
 
-  const res = await fetch('/api/admin')
+  const res = await fetch(`${process.env.BASE_URL}/api/admin`)
 
   const data = await res.json()
 

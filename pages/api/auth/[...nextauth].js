@@ -1,15 +1,10 @@
 import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
 import {MongoClient} from "mongodb";
 import Credentials from "next-auth/providers/credentials"
 
 
 export default NextAuth({
   providers: [
-    GoogleProvider({
-      clientId: "115603208302-cb53ptse6k34vaf4lpgtfmjfvqdfr96e.apps.googleusercontent.com",
-      clientSecret: "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"
-    }),
     Credentials(
       {
         name: "Credential",
@@ -17,7 +12,7 @@ export default NextAuth({
 
           let result = undefined
 
-          const client = await MongoClient.connect('mongodb+srv://khambui2003:Emtraitoi123@office.9dnkbti.mongodb.net/seproject?retryWrites=true&w=majority')
+          const client = await MongoClient.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@office.9dnkbti.mongodb.net/seproject?retryWrites=true&w=majority`)
 
           const db = client.db()
 

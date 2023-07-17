@@ -20,7 +20,7 @@ export default function ()
           email: data.email,
           password: data.password,
           role: data.role,
-          callbackUrl: "/"
+          callbackUrl: `${process.env.BASE_URL}`
         })
 
     if (!status.ok)
@@ -84,7 +84,7 @@ export async function getServerSideProps({req}){
   if (session) {
     return {
       redirect:{
-        destination: '/',
+        destination: `${process.env.BASE_URL}`,
         permanent: true
       }
     }
@@ -93,5 +93,4 @@ export async function getServerSideProps({req}){
   return {
     props: {}
   }
-
 }

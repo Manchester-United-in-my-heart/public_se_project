@@ -4,22 +4,24 @@ import ShopHeader from "@/layout/headers/shopHeader";
 import ProductFragment from "@/layout/fragments/productList";
 export default function (props)
 {
+  const baseUrl = props.baseUrl
   const {data: session} = useSession()
   const [productList, setProductList] = useState([...props.productList])
   return(
     <>
-      <ShopHeader logoUrl={'/'} logoSrc={'/logo.png'} productUrl={'/product'} signOutHandler={signOut}/>
-      <ProductFragment productList={productList} addUrl={`/product/add`}/>
+      <ShopHeader logoUrl={baseUrl} logoSrc={'/logo.png'} productUrl={`${baseUrl}/product`} signOutHandler={signOut}/>
+      <ProductFragment productList={productList} addUrl={`${baseUrl}/product/add`} baseUrl={baseUrl}/>
     </>
   )
 }
 
 export async function getServerSideProps({req}){
+  const baseUrl = process.env.BASE_URL
   const session = await getSession({req})
   if (!session) {
     return {
       redirect: {
-        destination: '/login',
+        destination: `${baseUrl}/login`,
         permanent: true
       },
     }
@@ -28,19 +30,20 @@ export async function getServerSideProps({req}){
   if (session.dispatchToken.user.role === 'admin' || session.dispatchToken.user.role === 'customer') {
     return {
       redirect: {
-        destination: '/',
+        destination: `${baseUrl}/`,
         permanent: true
       }
     }
   }
-  const res = await fetch(`http://localhost:3000/api/shop?shopId=${session.dispatchToken.user._id}`)
+  const res = await fetch(`${baseUrl}/api/shop?shopId=${session.dispatchToken.user._id}`)
 
   const data = await res.json()
 
   return {
     props: {
       session,
-      productList: data.productList
+      productList: data.productList,
+      baseUrl: baseUrl
     }
   }
 }

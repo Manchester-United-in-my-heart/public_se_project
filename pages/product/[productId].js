@@ -7,6 +7,7 @@ import EditProductFragment from "@/layout/fragments/editProduct";
 import NotificationContext from "@/store/notification-context";
 export default function (props)
 {
+  console.log(props)
   const baseUrl = props.baseUrl
   const notificationContext = useContext(NotificationContext)
   const [product,setProduct] = useState(
@@ -108,7 +109,7 @@ export async function getServerSideProps({req, params})
   const data = await res.json()
 
   return {
-    props: data.product,
-    baseUrl: baseUrl,
+    props:
+      {...data.product, baseUrl},
   }
 }

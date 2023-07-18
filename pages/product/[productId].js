@@ -7,6 +7,7 @@ import EditProductFragment from "@/layout/fragments/editProduct";
 import NotificationContext from "@/store/notification-context";
 export default function (props)
 {
+  const baseUrl = props.baseUrl
   const notificationContext = useContext(NotificationContext)
   const [product,setProduct] = useState(
     {
@@ -38,7 +39,7 @@ export default function (props)
       const storageRef = ref(storage, `/files/${file.name}${new Date}`);
       await uploadBytesResumable(storageRef, file)
       const newUrl = await getDownloadURL(storageRef)
-      await fetch(`http://localhost:3000/api/product?productId=${product.productId}`,
+      await fetch(`${baseUrl}/api/product?productId=${product.productId}`,
         {
           method: 'PUT',
           body: JSON.stringify({
@@ -59,7 +60,7 @@ export default function (props)
         isError: false,
         errorMessage: '',
       })
-      await fetch(`http://localhost:3000/api/product?productId=${product.productId}`,
+      await fetch(`${baseUrl}/api/product?productId=${product.productId}`,
         {
           method: 'PUT',
           body: JSON.stringify({
@@ -83,7 +84,7 @@ export default function (props)
 
   const deleteHandler = async (data) =>
   {
-    await fetch(`http://localhost:3000/api/product?productId=${product.productId}`,
+    await fetch(`${baseUrl}/api/product?productId=${product.productId}`,
       {
         method: 'DELETE',
       })
@@ -91,7 +92,7 @@ export default function (props)
 
   return (
     <>
-      <ShopHeader logoUrl={'/'} logoSrc={'/logo.png'} productUrl={'/product'} signOutHandler={signOut}/>
+      <ShopHeader logoUrl={baseUrl} logoSrc={'/logo.png'} productUrl={`${baseUrl}/product`} signOutHandler={signOut}/>
       <EditProductFragment product={product} saveChangeHandler={saveChangeHandler} deleteHandler={deleteHandler} file={file} setFile={setFile} isUsedFile={isUsedFile} setIsUsedFile={setIsUsedFile}/>
     </>
   )
@@ -99,13 +100,15 @@ export default function (props)
 
 export async function getServerSideProps({req, params})
 {
+  const baseUrl = process.env.BASE_URL
   const session = await getSession({req})
 
-  const res = await fetch(`http://localhost:3000/api/product?productId=${params.productId}`)
+  const res = await fetch(`${baseUrl}/api/product?productId=${params.productId}`)
 
   const data = await res.json()
 
   return {
-    props: data.product
+    props: data.product,
+    baseUrl: baseUrl,
   }
 }

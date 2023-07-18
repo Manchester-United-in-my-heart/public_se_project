@@ -7,7 +7,7 @@ export default function PaymentModal(props)
 {
   const notificationContext = useContext(NotificationContext)
   const session = useSession()
-  const {cart, shopId, shopName, totalPaid, setIsPaymentModalOn, setIsDeleteTriggerOn} = {...props}
+  const {cart, shopId, shopName, totalPaid, setIsPaymentModalOn, setIsDeleteTriggerOn, baseUrl} = {...props}
   const {register, handleSubmit, watch, setValue}= useForm();
   const onSubmit = async (data) => {
 
@@ -33,7 +33,7 @@ export default function PaymentModal(props)
       dateCreate: new Date()
     }
 
-    const res = await fetch('/api/bill', {
+    const res = await fetch(`${baseUrl}/api/bill`, {
       method: 'POST',
       body: JSON.stringify(billBody)
     })

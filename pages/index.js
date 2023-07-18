@@ -202,7 +202,7 @@ export default function Home(props) {
   const [isCartModalOn, setIsCartModalOn] = useState(false)
   return (
         <>
-          {isCartModalOn && <CartModal cartId={props.session.dispatchToken.user._id} cartList={props.cartList} shopList={props.shopList} setIsCartModalOn={setIsCartModalOn} purchaseHandler={()=>{}}/>}
+          {isCartModalOn && <CartModal cartId={props.session.dispatchToken.user._id} cartList={props.cartList} shopList={props.shopList} setIsCartModalOn={setIsCartModalOn} purchaseHandler={()=>{}} baseUrl={baseUrl}/>}
           <CustomerHeader logoUrl={baseUrl} logoSrc={'/logo.png'} showCartHandler={setIsCartModalOn} signOutHandler={signOut}/>
           <ShopFragment shopList={props.shopList} />
         </>

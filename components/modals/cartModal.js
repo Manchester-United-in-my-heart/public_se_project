@@ -9,7 +9,7 @@ export default function CartModal(props) {
 
   const {register, handleSubmit, watch, setValue}= useForm();
 
-  const {cartId ,cartList, shopList, setIsCartModalOn} = {...props}
+  const {cartId ,cartList, shopList, setIsCartModalOn, baseUrl} = {...props}
 
   const [isPaymentModalOn, setIsPaymentModalOn] = useState(false)
 
@@ -117,7 +117,7 @@ export default function CartModal(props) {
     }
     const process = async () =>
     {
-      await fetch(`http://localhost:3000/api/customer?cartId=${cartId}`,{
+      await fetch(`${baseUrl}/api/customer?cartId=${cartId}`,{
         method: 'PATCH',
         body: JSON.stringify(body)
       })
@@ -135,7 +135,7 @@ export default function CartModal(props) {
   }, [cart, isDeleteTriggerOn])
   return (
     <>
-    {isPaymentModalOn && <PaymentModal {...paymentModalProps}/>}
+    {isPaymentModalOn && <PaymentModal {...paymentModalProps} baseUrl={baseUrl}/>}
       <div className={'absolute top-0 left-0 w-full h-full bg-black bg-opacity-80'}>
         <div className={'absolute border-blue-800 border-[4px] rounded-xl top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-20 bg-white'}>
           <form>

@@ -7,6 +7,7 @@ import AddProductFragment from "@/layout/fragments/addProduct";
 import NotificationContext from "@/store/notification-context";
 export default function (props)
 {
+  const baseUrl = props.baseUrl
   const notificationContext = useContext(NotificationContext)
   const [product,setProduct] = useState(
     {
@@ -38,7 +39,7 @@ export default function (props)
       const storageRef = ref(storage, `/files/${file.name}${new Date}`);
       await uploadBytesResumable(storageRef, file)
       const newUrl = await getDownloadURL(storageRef)
-      await fetch(`http://localhost:3000/api/product`,
+      await fetch(`${baseUrl}/api/product`,
         {
           method: 'POST',
           body: JSON.stringify({
@@ -60,7 +61,7 @@ export default function (props)
         isError: false,
         errorMessage: '',
       })
-      await fetch(`http://localhost:3000/api/product`,
+      await fetch(`${baseUrl}/api/product`,
         {
           method: 'POST',
           body: JSON.stringify({
@@ -84,7 +85,7 @@ export default function (props)
 
   return (
     <>
-      <ShopHeader logoUrl={'/'} logoSrc={'/logo.png'} productUrl={'/product'} signOutHandler={signOut}/>
+      <ShopHeader logoUrl={baseUrl} logoSrc={'/logo.png'} productUrl={`${baseUrl}/product`} signOutHandler={signOut}/>
       <AddProductFragment product={product} addHandler={addHandler} file={file} setFile={setFile} isUsedFile={isUsedFile} setIsUsedFile={setIsUsedFile}/>
     </>
   )
@@ -92,13 +93,14 @@ export default function (props)
 
 export async function getServerSideProps({req})
 {
+  const baseUrl = process.env.BASE_URL
   const session = await getSession({req})
 
   if(!session)
   {
     return {
       redirect: {
-        destination: '/login',
+        destination: `${baseUrl}/login`,
         permanent: false
       }
     }
@@ -106,7 +108,8 @@ export async function getServerSideProps({req})
 
   return {
     props: {
-      session
+      session,
+      baseUrl: baseUrl
     }
   }
 }

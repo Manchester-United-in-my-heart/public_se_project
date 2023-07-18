@@ -14,7 +14,7 @@ export default function (props)
       }
 
       notificationCtx.showNotification({isLoading: true, isError: false, errorMessage: ''})
-      const res = await fetch('http://localhost:3000/api/customer', {
+      const res = await fetch(`${props.baseUrl}/api/customer`, {
         method: 'POST',
         body: JSON.stringify(
           {
@@ -31,7 +31,7 @@ export default function (props)
       } else {
         notificationCtx.showNotification
         ({isLoading: false, isSuccess: true, successMessage: 'Đăng ký thành công, đang chuyển hướng...', isError: false, errorMessage: ''})
-        await router.push('/')
+        await router.push(`${props.baseUrl}/login`)
         notificationCtx.hideNotification()
       }
     }
@@ -80,4 +80,13 @@ export default function (props)
         </div>
       </>
     )
+}
+
+export async function getServerSideProps(context) {
+  const baseUrl = process.env.BASE_URL
+  return {
+    props: {
+      baseUrl: baseUrl
+    }
+  }
 }

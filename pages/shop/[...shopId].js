@@ -5,6 +5,7 @@ import NotificationContext from "@/store/notification-context";
 import ProductSelectFragment from "@/layout/fragments/productSelect";
 export default function (props)
 {
+  const baseUrl = props.baseUrl
   const {register, handleSubmit, watch, setValue}= useForm();
   const notificationContext = useContext(NotificationContext)
   const [currentCart, setCurrentCart] = useState({...props.cart.cartList})
@@ -57,7 +58,7 @@ export default function (props)
     () => {
       if (Object.keys(currentCart).length !== Object.keys(initialCart).length) {
         const process = async () => {
-          await fetch(`http://localhost:3000/api/customer?cartId=${props.cart.cartId}`, {
+          await fetch(`${baseUrl}/api/customer?cartId=${props.cart.cartId}`, {
             method: 'PATCH',
             body: JSON.stringify({
               cartList: currentCart
@@ -98,15 +99,16 @@ export default function (props)
 
 export async function getServerSideProps({req,params})
 {
+  const baseUrl = process.env.BASE_URL
   const session = await getSession({req})
 
   const shopId = params.shopId[0]
 
-  const shopRes = await fetch(`http://localhost:3000/api/shop?shopId=${shopId}`)
+  const shopRes = await fetch(`${baseUrl}/api/shop?shopId=${shopId}`)
 
   const productList = await shopRes.json()
 
-  const cartRes  = await fetch(`http://localhost:3000/api/customer?cartId=${session.dispatchToken.user._id}`)
+  const cartRes  = await fetch(`${baseUrl}/api/customer?cartId=${session.dispatchToken.user._id}`)
 
   const cart = await cartRes.json()
 
@@ -116,7 +118,8 @@ export async function getServerSideProps({req,params})
       shopId:shopId,
       productList: productList.productList,
       cart: cart.cart,
-      shopName: productList.shopName
+      shopName: productList.shopName,
+      baseUrl: baseUrl
     }
   }
 }

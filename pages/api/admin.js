@@ -36,6 +36,8 @@ export default async function (req, res) {
   }
   else if (req.method === 'PUT') {
 
+    console.log('I am here')
+
     const client = await MongoClient.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@office.9dnkbti.mongodb.net/seproject?retryWrites=true&w=majority`)
 
     const db = client.db()

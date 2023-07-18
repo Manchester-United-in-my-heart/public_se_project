@@ -15,7 +15,7 @@ export default function Home(props) {
   const {data: session} = useSession()
   const notificationCtx = useContext(NotificationContext)
   if (session.dispatchToken.user.role === "admin") {
-
+    const baseUrl = props.baseUrl
     const [listShop, setListShop] = useState(props.shop.list_shop)
     const [isLoadingListShop,setIsLoadingListShop] = useState(false)
     const [isShownEditModal, setIsShownEditModal] = useState(false)
@@ -43,7 +43,7 @@ export default function Home(props) {
 
     const deleteApi = async (id) => {
       setIsLoadingListShop(true)
-      const res = await fetch(`/api/admin?id=${id}`, {
+      const res = await fetch(`${baseUrl}/api/admin?id=${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
@@ -56,7 +56,7 @@ export default function Home(props) {
     }
     const editApi = async (id, name, email, password, address, phone) => {
       setIsLoadingListShop(true)
-      const res = await fetch(`/api/admin`, {
+      const res = await fetch(`${baseUrl}/api/admin`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -79,7 +79,7 @@ export default function Home(props) {
     }
     const addApi = async (name, email, password, address, phone) => {
       setIsLoadingListShop(true)
-      const res = await fetch(`/api/admin`, {
+      const res = await fetch(`${baseUrl}/api/admin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -99,15 +99,13 @@ export default function Home(props) {
       }])
       }
 
-
     return (
       <>
         {isShownAddModal && <AddModal name={''} email={''} password={''} address={''} phone={''} showHandler={setIsShownAddModal} addHandler={addApi} notificationContext={notificationCtx} />}
         {isShownEditModal && <EditModal id={editData.id} name={editData.name} email={editData.email} password={editData.password} address={editData.address} phone={editData.phone} showHandler={setIsShownEditModal} deleteHandler={deleteApi} editHandler={editApi} notificationContext={notificationCtx}/>}
         <div className={'p-4 flex justify-around'}>
-          <AdminHeader logoUrl={'/'} logoSrc={'/logo.png'} signOutHandler={signOut}/>
+          <AdminHeader logoUrl={baseUrl} logoSrc={'/logo.png'} signOutHandler={signOut}/>
         </div>
-
         <div>
           <div>
             <div className={'px-20 columns-6 text-center'}>
@@ -145,9 +143,9 @@ export default function Home(props) {
     )
   }
   else if (session.dispatchToken.user.role === 'shop') {
+    const baseUrl = props.baseUrl
     const [billList, setBillList] = useState(props.billList)
     const fulfillHandler = async (id) => {
-
       notificationCtx.showNotification(
         {
           isLoading: true,
@@ -157,8 +155,7 @@ export default function Home(props) {
           errorMessage: '',
         }
       )
-
-      const res = await fetch(`/api/bill?billId=${id}`, {
+      const res = await fetch(`${baseUrl}/api/bill?billId=${id}`, {
         method: 'PATCH'})
 
       if (!res.ok) {
@@ -196,16 +193,17 @@ export default function Home(props) {
     return(
       <>
         {isCartModalOn && <ReadOnlyCartModal cartModalProps={cartModalProps} showHandler={setIsCartModalOn}/>}
-        <ShopHeader logoUrl={'/'} logoSrc={'/logo.png'} productUrl={'/product'} signOutHandler={signOut} />
+        <ShopHeader logoUrl={baseUrl} logoSrc={'/logo.png'} productUrl={`${baseUrl}/product`} signOutHandler={signOut} />
         <BillFragment billList={billList} fulfillHandler={fulfillHandler} setIsCartModalOn={setIsCartModalOn} setCartModalProps={setCartModalProps} />
       </>
     )
   }
+  const baseUrl = props.baseUrl
   const [isCartModalOn, setIsCartModalOn] = useState(false)
   return (
         <>
           {isCartModalOn && <CartModal cartId={props.session.dispatchToken.user._id} cartList={props.cartList} shopList={props.shopList} setIsCartModalOn={setIsCartModalOn} purchaseHandler={()=>{}}/>}
-          <CustomerHeader logoUrl={'/'} logoSrc={'/logo.png'} showCartHandler={setIsCartModalOn} signOutHandler={signOut}/>
+          <CustomerHeader logoUrl={baseUrl} logoSrc={'/logo.png'} showCartHandler={setIsCartModalOn} signOutHandler={signOut}/>
           <ShopFragment shopList={props.shopList} />
         </>
   )
@@ -217,7 +215,7 @@ export async function getServerSideProps({req}) {
   if (!session) {
     return {
       redirect: {
-        destination: '/login',
+        destination: `${process.env.BASE_URL}/login`,
         permanent: false
       },
     }
@@ -232,35 +230,38 @@ export async function getServerSideProps({req}) {
   return {
     props: {
       session,
-      shop: data
+      shop: data,
+      baseUrl: process.env.BASE_URL
     }
   }}
   else if (session.dispatchToken.user.role === 'shop') {
-    const res = await fetch(`/api/shop?shopID=${session.dispatchToken.user._id}`)
+    const res = await fetch(`${process.env.BASE_URL}/api/shop?shopId=${session.dispatchToken.user._id}`)
     const data = await res.json()
 
-    const resBill = await fetch(`/api/bill?shopId=${session.dispatchToken.user._id}`)
+    const resBill = await fetch(`${process.env.BASE_URL}/api/bill?shopId=${session.dispatchToken.user._id}`)
     const dataBill = await resBill.json()
 
     return {
       props: {
         session,
         productList: data.productList,
-        billList: dataBill.bills
+        billList: dataBill.bills,
+        baseUrl: process.env.BASE_URL
       }
     }
   }
 
   else if (session.dispatchToken.user.role === 'customer') {
-    const shopRes = await fetch(`/api/admin`)
+    const shopRes = await fetch(`${process.env.BASE_URL}/api/admin`)
     const shopData = await shopRes.json()
-    const cartRes = await fetch(`/api/customer?cartId=${session.dispatchToken.user._id}`)
+    const cartRes = await fetch(`${process.env.BASE_URL}/api/customer?cartId=${session.dispatchToken.user._id}`)
     const cartData = await cartRes.json()
     return {
       props: {
         session:session,
         shopList: shopData.list_shop,
-        cartList: cartData.cart.cartList
+        cartList: cartData.cart.cartList,
+        baseUrl: process.env.BASE_URL
       }
     }
   }

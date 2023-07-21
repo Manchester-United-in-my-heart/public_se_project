@@ -5,8 +5,11 @@ import {getSession, signOut} from "next-auth/react";
 import ShopHeader from "@/layout/headers/shopHeader";
 import AddProductFragment from "@/layout/fragments/addProduct";
 import NotificationContext from "@/store/notification-context";
+import {useRouter} from "next/router";
+
 export default function (props)
 {
+  const router = useRouter()
   const baseUrl = props.baseUrl
   const notificationContext = useContext(NotificationContext)
   const [product,setProduct] = useState(
@@ -77,10 +80,12 @@ export default function (props)
     notificationContext.showNotification({
       isLoading: false,
       isSuccess: true,
-      successMessage: 'Tải lên thành công',
+      successMessage: 'Tải lên thành công, đang chuyển hướng về trang sản phẩm ',
       isError: false,
       errorMessage: '',
     })
+    await router.push(`${baseUrl}/product`)
+    notificationContext.hideNotification()
   }
 
   return (

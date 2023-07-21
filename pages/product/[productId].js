@@ -5,9 +5,11 @@ import { ref, uploadBytesResumable, getDownloadURL} from "firebase/storage";
 import ShopHeader from "@/layout/headers/shopHeader";
 import EditProductFragment from "@/layout/fragments/editProduct";
 import NotificationContext from "@/store/notification-context";
+import {useRouter} from "next/router";
+
 export default function (props)
 {
-  console.log(props)
+  const router = useRouter()
   const baseUrl = props.baseUrl
   const notificationContext = useContext(NotificationContext)
   const [product,setProduct] = useState(
@@ -77,18 +79,36 @@ export default function (props)
     notificationContext.showNotification({
       isLoading: false,
       isSuccess: true,
-      successMessage: 'Lưu thành công',
+      successMessage: 'Cập nhật thành công, đang chuyển hướng về sản phẩm',
       isError: false,
       errorMessage: '',
     })
+    await router.push(`${baseUrl}/product`)
+    notificationContext.hideNotification()
   }
 
   const deleteHandler = async (data) =>
   {
+    notificationContext.showNotification({
+      isLoading: true,
+      isSuccess: false,
+      successMessage: '',
+      isError: false,
+      errorMessage: '',
+    })
     await fetch(`${baseUrl}/api/product?productId=${product.productId}`,
       {
         method: 'DELETE',
       })
+    notificationContext.showNotification({
+      isLoading: false,
+      isSuccess: true,
+      successMessage: 'Xóa thành công, đang chuyển hướng về sản phẩm',
+      isError: false,
+      errorMessage: '',
+    })
+    await router.push(`${baseUrl}/product`)
+    notificationContext.hideNotification()
   }
 
   return (

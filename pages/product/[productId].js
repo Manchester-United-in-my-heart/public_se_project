@@ -50,7 +50,8 @@ export default function (props)
               productDescription: data.productDescription,
               productPrice: data.productPrice,
               productUnit: data.productUnit,
-              productImage: newUrl
+              productImage: newUrl,
+              shopId: props.session.dispatchToken.user._id
             }
           )
         })
@@ -71,7 +72,8 @@ export default function (props)
               productDescription: data.productDescription,
               productPrice: data.productPrice,
               productUnit: data.productUnit,
-              productImage: data.link
+              productImage: data.link,
+              shopId: props.session.dispatchToken.user._id
             }
           )
         })
@@ -130,6 +132,6 @@ export async function getServerSideProps({req, params})
 
   return {
     props:
-      {...data.product, baseUrl},
+      {...data.product, baseUrl, session},
   }
 }

@@ -1,0 +1,14 @@
+data: {
+   shop1:{
+	name: 'Yen Nghia Coffee',
+	phone: 0123456789
+	},
+shop2:{
+	name: 'Phenikaa Coffee',
+	phone: 111222333
+	},
+shop3:{ 
+	name: 'New Coffee',
+	phone: 23232323
+	},
+}

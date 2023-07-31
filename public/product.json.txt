@@ -9,5 +9,5 @@ product2:{
 	},
 product3:{
 	name:'Tra sua'
-	price: 40.000
+	price: 50.000
 }

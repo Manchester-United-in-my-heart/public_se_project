@@ -1,7 +1,7 @@
-Dự án kĩ thuật phần mềm của nhóm Bùi Dương Khâm, Đỗ Trọng Hiệp: Website quản lý bán hàng chuỗi cafe
-Giảng viên: TS. Trịnh Thanh Bình
-Môn học: Kĩ thuật phần mềm
-Trường: Đại học Phenikaa
+<h2>Dự án kĩ thuật phần mềm của nhóm Bùi Dương Khâm, Đỗ Trọng Hiệp: Website quản lý bán hàng chuỗi cafe</h2>
+<h3>Giảng viên: TS. Trịnh Thanh Bình</h3>
+<h4>Môn học: Kĩ thuật phần mềm</h4>
+<h4>Trường: Đại học Phenikaa</h4>
 
 Dự án được xây dựng bằng NextJS, ReactJS, NodeJS, MongoDB
 

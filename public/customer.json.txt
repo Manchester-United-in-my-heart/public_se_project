@@ -9,6 +9,6 @@ staff2:{
 	},
 staff3:{
 	name'Hiep',
-	age: 20
+	age: 22
 	},
 }

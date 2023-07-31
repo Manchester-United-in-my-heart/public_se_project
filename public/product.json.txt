@@ -7,4 +7,7 @@ product2:{
 	name: 'Nuoc dua',
 	price: 40.000 
 	},
+product3:{
+	name:'Tra sua'
+	price: 40.000
 }

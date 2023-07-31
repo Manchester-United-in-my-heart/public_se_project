@@ -9,6 +9,6 @@ shop2:{
 	},
 shop3:{ 
 	name: 'New Coffee',
-	phone: 2323232323
+	phone: 23232323
 	},
 }

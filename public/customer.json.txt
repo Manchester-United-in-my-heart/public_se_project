@@ -7,4 +7,8 @@ staff2:{
 	name: 'An',
 	age: 20
 	},
+staff3:{
+	name'Hiep',
+	age: 20
+	},
 }

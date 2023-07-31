@@ -1,0 +1,10 @@
+data: {
+   product1:{
+	name: 'Nuoc cam',
+	price: 30.000
+	},
+product2:{
+	name: 'Nuoc dua',
+	price: 40.000 
+	},
+}

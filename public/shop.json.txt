@@ -7,4 +7,8 @@ shop2:{
 	name: 'Phenikaa Coffee',
 	phone: 111222333
 	},
+shop3:{ 
+	name: 'New Coffee',
+	phone: 2323232323
+	},
 }

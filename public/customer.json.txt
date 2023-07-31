@@ -1,0 +1,10 @@
+data: {
+   staff1:{
+	name: 'Kham',
+	age: 20
+	},
+staff2:{
+	name: 'An',
+	age: 20
+	},
+}
